@@ -92,7 +92,8 @@
         </div>
         <div>
           <h1 class="font-black text-sm tracking-wider text-white uppercase leading-tight">HẬU DÒNG TIỀN</h1>
-          <!-- Bộ công cụ Backup / Restore dữ liệu -->
+          <p class="text-[10px] text-gold-500 font-extrabold tracking-widest uppercase">REAL ESTATE • ĐÀ NẴNG</p>
+<!-- Bộ công cụ Backup / Restore dữ liệu -->
 <div class="flex gap-3 mb-6">
     <button onclick="exportData()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow transition flex items-center gap-2">
         <span>📥</span> Xuất file sao lưu (Backup)
@@ -102,7 +103,6 @@
         <input type="file" id="importFileInput" accept=".json,.csv" onchange="importData(event)" class="hidden">
     </label>
 </div>
-          <p class="text-[10px] text-gold-500 font-extrabold tracking-widest uppercase">REAL ESTATE • ĐÀ NẴNG</p>
         </div>
       </div>
 
@@ -2398,8 +2398,7 @@
         .catch(err => console.log('SW registration failed: ', err));
     });
   }
-</script>
-  // 1. TÍNH NĂNG XUẤT DỮ LIỆU (EXPORT)
+// 1. TÍNH NĂNG XUẤT DỮ LIỆU (EXPORT)
 function exportData() {
     const properties = localStorage.getItem('hau_real_estate_list') || '[]';
     if (properties === '[]') {
@@ -2447,5 +2446,6 @@ function importData(event) {
     };
     reader.readAsText(file);
 }
+</script>
 </body>
 </html>
