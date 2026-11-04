@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HẬU DÒNG TIỀN REAL ESTATE - Quản Trị & Phân Tích BĐS Đà Nẵng</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              950: '#060d17',
+              900: '#0a192f',
+              850: '#0f223d',
+              800: '#132b4f',
+              700: '#1b3a6b',
+              accent: '#10b981', // Emerald Green
+              accentHover: '#059669',
+              accentLight: '#d1fae5'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js & Lucide Icons CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans">
+
+  <div class="min-h-screen flex flex-col md:flex-row">
+    
+    <!-- ================= SIDEBAR DESKTOP ================= -->
+    <aside class="hidden md:flex flex-col w-72 bg-brand-900 text-slate-200 border-r border-brand-800 flex-shrink-0 min-h-screen">
+      <!-- Logo Thương hiệu -->
+      <div class="p-6 border-b border-brand-800/80 flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-accent to-emerald-300 flex items-center justify-center text-brand-900 font-black text-xl shadow-lg">
+          H
+        </div>
+        <div>
+          <h1 class="font-extrabold text-sm tracking-wider text-white uppercase leading-tight">HẬU DÒNG TIỀN</h1>
+          <p class="text-[11px] text-brand-accent font-semibold tracking-tight">REAL ESTATE PORTFOLIO</p>
+        </div>
+      </div>
+
+      <!-- Điều hướng chính -->
+      <nav class="flex-1 p-4 space-y-2">
+        <a href="#dashboard" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-brand-accent text-white font-semibold shadow-md shadow-emerald-950/20">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          <span>Dashboard Tổng Quan</span>
+        </a>
+        <a href="#property-section" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-brand-800 hover:text-white transition font-medium">
+          <i data-lucide="building-2" class="w-5 h-5"></i>
+          <span class="flex-1">Danh Mục BĐS</span>
+          <span id="badge-total-count" class="text-xs bg-brand-800 px-2 py-0.5 rounded-full text-brand-accent font-bold">0</span>
+        </a>
+      </nav>
+
+      <!-- Tiện ích Data & Thị Trường Đà Nẵng -->
+      <div class="p-4 border-t border-brand-800/80 space-y-2">
+        <div class="text-[11px] uppercase tracking-wider text-slate-400 font-semibold px-2">Quản lý cơ sở dữ liệu</div>
+        <button onclick="restoreDemoData()" class="w-full text-xs flex items-center space-x-2 text-slate-300 hover:text-white px-3 py-2 rounded-lg hover:bg-brand-800 transition">
+          <i data-lucide="refresh-cw" class="w-4 h-4 text-brand-accent"></i>
+          <span>Nạp Dữ Liệu Mẫu Đà Nẵng</span>
+        </button>
+        <button onclick="clearAllData()" class="w-full text-xs flex items-center space-x-2 text-rose-400 hover:text-rose-300 px-3 py-2 rounded-lg hover:bg-brand-800 transition">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+          <span>Xóa Toàn Bộ Dữ Liệu</span>
+        </button>
+      </div>
+
+      <div class="p-4 bg-brand-950/70 m-3 rounded-2xl border border-brand-800 flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-xs">
+          ĐN
+        </div>
+        <div class="text-xs">
+          <p class="font-bold text-white">Thị trường: Đà Nẵng</p>
+          <p class="text-slate-400 text-[11px]">Chuyên Dòng Tiền Thuê</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= HEADER MOBILE ================= -->
+    <header class="md:hidden bg-brand-900 text-white p-4 flex justify-between items-center sticky top-0 z-40 shadow-md">
+      <div class="flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-900 font-black text-lg">
+          H
+        </div>
+        <div>
+          <span class="font-extrabold tracking-wide block text-sm">HẬU DÒNG TIỀN</span>
+          <span class="text-[10px] text-brand-accent block">REAL ESTATE</span>
+        </div>
+      </div>
+      <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-brand-800">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </header>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden bg-brand-900 border-b border-brand-800 px-4 py-3 space-y-2 text-sm text-slate-200">
+      <a href="#dashboard" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg bg-brand-accent text-white font-semibold">Dashboard Tổng Quan</a>
+      <a href="#property-section" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-brand-800">Quản Lý Bất Động Sản</a>
+      <button onclick="restoreDemoData(); toggleMobileMenu();" class="w-full text-left py-2 px-3 text-brand-accent hover:bg-brand-800 rounded-lg">Nạp lại mẫu Đà Nẵng</button>
+    </div>
+
+    <!-- ================= NỘI DUNG CHÍNH (MAIN CONTENT) ================= -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-7xl mx-auto space-y-8 w-full">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-brand-900 tracking-tight">Hệ Thống Quản Trị & Phân Tích Dòng Tiền BĐS</h2>
+          <p class="text-xs md:text-sm text-slate-500 mt-1">Tối ưu hiệu suất danh mục căn hộ cho thuê, nhà phố và tòa nhà tại Đà Nẵng.</p>
+        </div>
+        <button onclick="openPropertyModal()" class="bg-brand-900 hover:bg-brand-850 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md flex items-center justify-center space-x-2 transition self-start sm:self-auto">
+          <i data-lucide="plus" class="w-5 h-5 text-brand-accent"></i>
+          <span>Thêm Bất Động Sản Mới</span>
+        </button>
+      </div>
+
+      <!-- 6 CHỈ SỐ DASHBOARD TỔNG QUAN -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="dashboard">
+        
+        <!-- KPI 1 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-500 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider">Tổng giá trị tài sản</span>
+            <div class="p-2.5 rounded-xl bg-slate-100 text-brand-900">
+              <i data-lucide="building" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-total-value" class="text-2xl font-black text-brand-900">0 ₫</div>
+          <div class="text-[11px] text-slate-400 mt-2">Tổng nguyên giá hợp đồng mua bán</div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-500 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider">Tổng vốn đầu tư</span>
+            <div class="p-2.5 rounded-xl bg-blue-50 text-blue-600">
+              <i data-lucide="layers" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-total-investment" class="text-2xl font-black text-brand-900">0 ₫</div>
+          <div class="text-[11px] text-slate-400 mt-2">Bao gồm: Giá mua + Chi phí sửa chữa, nội thất</div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-500 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider">Doanh thu thuê / Tháng</span>
+            <div class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+              <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-monthly-rev" class="text-2xl font-black text-emerald-600">0 ₫</div>
+          <div class="text-[11px] text-slate-400 mt-2" id="kpi-annual-rev">Ước tính: 0 ₫ / năm</div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-500 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider">CP Vận hành & Lãi vay / Tháng</span>
+            <div class="p-2.5 rounded-xl bg-rose-50 text-rose-600">
+              <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-monthly-opex" class="text-2xl font-black text-rose-600">0 ₫</div>
+          <div class="text-[11px] text-slate-400 mt-2">Vận hành + Phí quản lý + Lãi vay ngân hàng</div>
+        </div>
+
+        <!-- KPI 5 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-500 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider">Dòng tiền ròng / Tháng</span>
+            <div id="kpi-net-icon-wrap" class="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+              <i data-lucide="wallet" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-monthly-net" class="text-2xl font-black text-emerald-700">0 ₫</div>
+          <div class="text-[11px] text-slate-400 mt-2">Dòng tiền thặng dư thực nhận hàng tháng</div>
+        </div>
+
+        <!-- KPI 6 -->
+        <div class="bg-gradient-to-br from-brand-900 to-brand-850 text-white p-5 rounded-2xl border border-brand-700 shadow-md relative overflow-hidden">
+          <div class="flex items-center justify-between text-slate-300 mb-2">
+            <span class="text-xs uppercase font-bold tracking-wider text-emerald-400">ROI Dòng Tiền Bình Quân</span>
+            <div class="p-2.5 rounded-xl bg-white/10 text-emerald-400">
+              <i data-lucide="trending-up" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <div id="kpi-average-roi" class="text-3xl font-black text-white">0.00% <span class="text-xs font-normal text-slate-300">/ năm</span></div>
+          <div class="text-[11px] text-slate-300 mt-2">Cash-on-Cash Return trên toàn bộ vốn đầu tư</div>
+        </div>
+      </div>
+
+      <!-- 2 BIỂU ĐỒ TRỰC QUAN HÓA DỮ LIỆU -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-brand-900 text-base">Cân Đối Doanh Thu & Chi Phí 12 Tháng</h3>
+              <p class="text-xs text-slate-400">Đơn vị: Triệu VNĐ</p>
+            </div>
+            <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Chu kỳ năm</span>
+          </div>
+          <div class="h-64 sm:h-72 w-full">
+            <canvas id="chart-rev-opex"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="mb-4">
+            <h3 class="font-bold text-brand-900 text-base">Phân Bổ Vốn Theo Loại Hình</h3>
+            <p class="text-xs text-slate-400">Tỷ trọng vốn đầu tư theo danh mục BĐS</p>
+          </div>
+          <div class="h-64 w-full relative flex-1 flex items-center justify-center">
+            <canvas id="chart-property-type"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= QUẢN LÝ DANH MỤC BẤT ĐỘNG SẢN ================= -->
+      <div id="property-section" class="space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-brand-900">Danh Mục Quản Lý Bất Động Sản Đà Nẵng</h3>
+            <p class="text-xs text-slate-500">Tra cứu nhanh, xem báo cáo tài chính chi tiết và điều chỉnh thông số khai thác.</p>
+          </div>
+        </div>
+
+        <!-- Thanh Tìm kiếm và Bộ Lọc Tiêu Chuẩn -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400"></i>
+            <input
+              type="text"
+              id="filter-search"
+              oninput="applyFilters()"
+              placeholder="Tìm theo tên BĐS hoặc tuyến đường..."
+              class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-accent focus:bg-white"
+            />
+          </div>
+
+          <div>
+            <select
+              id="filter-district"
+              onchange="applyFilters()"
+              class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-accent focus:bg-white"
+            >
+              <option value="all">Tất cả Quận / Khu vực Đà Nẵng</option>
+              <option value="Hải Châu">Quận Hải Châu</option>
+              <option value="Sơn Trà">Quận Sơn Trà</option>
+              <option value="Ngũ Hành Sơn">Quận Ngũ Hành Sơn</option>
+              <option value="Thanh Khê">Quận Thanh Khê</option>
+              <option value="Cẩm Lệ">Quận Cẩm Lệ</option>
+              <option value="Liên Chiểu">Quận Liên Chiểu</option>
+              <option value="Hòa Vang">Huyện Hòa Vang</option>
+            </select>
+          </div>
+
+          <div>
+            <select
+              id="filter-type"
+              onchange="applyFilters()"
+              class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-brand-accent focus:bg-white"
+            >
+              <option value="all">Tất cả Loại hình</option>
+              <option value="apartment_building">Tòa căn hộ dịch vụ</option>
+              <option value="townhouse">Nhà phố thương mại</option>
+              <option value="apartment">Căn hộ chung cư</option>
+              <option value="villa">Biệt thự</option>
+              <option value="land">Đất nền</option>
+              <option value="commercial">Mặt bằng kinh doanh</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Bảng Dữ Liệu Bất Động Sản -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold border-b border-slate-200 tracking-wider">
+                <tr>
+                  <th class="py-3.5 px-5">Tên Bất Động Sản & Vị Trí</th>
+                  <th class="py-3.5 px-4">Loại hình / Quy mô</th>
+                  <th class="py-3.5 px-4 text-right">Tổng Vốn Đầu Tư</th>
+                  <th class="py-3.5 px-4 text-right">Doanh Thu Thuê</th>
+                  <th class="py-3.5 px-4 text-right">Dòng Tiền Ròng/Tháng</th>
+                  <th class="py-3.5 px-4 text-center">ROI Năm</th>
+                  <th class="py-3.5 px-5 text-center">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody id="property-table-body" class="divide-y divide-slate-100">
+                <!-- Dữ liệu render bằng JS -->
+              </tbody>
+            </table>
+          </div>
+          <div id="empty-state" class="hidden text-center py-12 px-4">
+            <i data-lucide="building" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
+            <p class="text-slate-500 text-sm font-medium">Không tìm thấy bất động sản phù hợp với bộ lọc.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODAL: THÊM / CHỈNH SỬA TÀI SẢN ================= -->
+  <div id="property-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden my-6">
+      
+      <!-- Header Modal -->
+      <div class="p-5 md:p-6 bg-brand-900 text-white flex justify-between items-center">
+        <div>
+          <h3 id="modal-title" class="text-lg font-bold">Thêm Bất Động Sản Vào Danh Mục</h3>
+          <p class="text-xs text-brand-accent">Hệ thống sẽ tự động tính Vốn Đầu Tư, Dòng Tiền Ròng và ROI</p>
+        </div>
+        <button onclick="closePropertyModal()" class="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-brand-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="property-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-6 max-h-[75vh] overflow-y-auto text-xs md:text-sm">
+        <input type="hidden" id="form-id" />
+
+        <!-- Phần 1: Thông tin quy mô & Địa chỉ -->
+        <div>
+          <h4 class="text-xs uppercase font-extrabold text-brand-900 tracking-wider mb-3 flex items-center space-x-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent"></i>
+            <span>1. Thông tin Vị Trí & Quy Mô (Đà Nẵng)</span>
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
