@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>HẬU DÒNG TIỀN REAL ESTATE - Quản Trị & So Sánh Tài Chính BĐS Đà Nẵng</title>
+  <title>HẬU DÒNG TIỀN REAL ESTATE - Bảng Dự Phóng 5 Năm & Bộ 3 Vũ Khí Chốt Deal BĐS</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +45,13 @@
   <!-- Icons & Chart.js CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<!-- Cấu hình PWA cho Mobile App -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hậu BĐS">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2972/2972351.png">
   <style>
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
@@ -55,12 +61,7 @@
     .gold-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
     .emerald-gradient { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
     .navy-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-
-    /* Custom Checkbox Styling */
-    .compare-checkbox:checked {
-      background-color: #059669;
-      border-color: #059669;
-    }
+    input[type=range] { accent-color: #d97706; }
 
     @media print {
       body * { visibility: hidden; }
@@ -95,7 +96,7 @@
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
+      <!-- Navigation Tabs: Đồng bộ cả 3 Vũ Khí Hỗ Trợ Bán Hàng -->
       <nav class="p-4 space-y-1.5 text-xs font-bold uppercase tracking-wider">
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
@@ -108,11 +109,25 @@
           <span id="badge-count-pc" class="text-[11px] bg-navy-800 text-gold-400 px-2 py-0.5 rounded-full font-black border border-navy-700">0</span>
         </button>
 
-        <!-- TÍNH NĂNG TRỌNG TÂM: SO SÁNH 2 TÀI SẢN -->
+        <!-- VŨ KHÍ 1: SO SÁNH 2 TÀI SẢN -->
         <button onclick="switchTab('compare')" id="nav-compare" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
-          <i data-lucide="columns-2" class="w-4 h-4 text-emerald-400"></i>
+          <i data-lucide="columns-2" class="w-4 h-4 text-amber-400"></i>
           <span class="flex-1 text-left">So Sánh 2 Tài Sản</span>
-          <span id="badge-compare-count" class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-black">0/2</span>
+          <span id="badge-compare-count" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-black">0/2</span>
+        </button>
+
+        <!-- VŨ KHÍ 2: GIẢ LẬP ĐÀM PHÁN (SLIDERS) -->
+        <button onclick="switchTab('simulator')" id="nav-simulator" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
+          <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i>
+          <span class="flex-1 text-left">Giả Lập Đàm Phán</span>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-black">LIVE</span>
+        </button>
+
+        <!-- VŨ KHÍ 3: DỰ PHÓNG TÀI SẢN 5 NĂM (NÂNG CẤP MỚI) -->
+        <button onclick="switchTab('projection')" id="nav-projection" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
+          <i data-lucide="trending-up" class="w-4 h-4 text-blue-400"></i>
+          <span class="flex-1 text-left">Dự Phóng 5 Năm</span>
+          <span class="text-[9px] bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded font-black">WEALTH</span>
         </button>
 
         <!-- BÁO CÁO PDF -->
@@ -131,7 +146,7 @@
           <span>Hệ Thống Đòn Bẩy</span>
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         </div>
-        <p class="text-[10px] leading-relaxed">Tự động tính nợ gốc & lãi P&I, kiểm định DSCR và tỷ suất sinh lời trên tiền mặt (CoCR).</p>
+        <p class="text-[10px] leading-relaxed">Tự động tính nợ gốc & lãi P&I, kiểm định DSCR, Cash-on-Cash và tích lũy tài sản 5 năm.</p>
       </div>
 
       <div class="flex items-center justify-between text-[11px] pt-1">
@@ -171,7 +186,6 @@
 
     <!-- ================= TAB 1: DASHBOARD TỔNG QUAN ================= -->
     <section id="tab-dashboard" class="space-y-6">
-      <!-- Top Banner Dashboard -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-navy-900 p-6 rounded-3xl text-white border border-navy-800 shadow-xl relative overflow-hidden">
         <div class="relative z-10">
           <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-gold-600/20 text-gold-400 border border-gold-600/30 text-xs font-bold uppercase mb-2">
@@ -188,9 +202,9 @@
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
             <span>Thêm Khảo Sát</span>
           </button>
-          <button onclick="switchTab('compare')" class="gold-gradient hover:opacity-95 text-navy-950 px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2 transition">
-            <i data-lucide="columns-2" class="w-4 h-4"></i>
-            <span>So Sánh 2 BĐS</span>
+          <button onclick="switchTab('projection')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2 transition">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            <span>Dự Phóng 5 Năm</span>
           </button>
         </div>
         <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-gold-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -198,7 +212,6 @@
 
       <!-- 6 KPI CARDS CHUYÊN SÂU TÀI CHÍNH THỰC CHIẾN -->
       <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-        <!-- KPI 1 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Tổng Vốn Danh Mục</span>
@@ -208,7 +221,6 @@
           <div class="text-[10px] text-slate-400 mt-1">Giá mua + Chi phí cải tạo</div>
         </div>
 
-        <!-- KPI 2 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Vốn Tự Có Bỏ Ra</span>
@@ -218,7 +230,6 @@
           <div id="kpi-loan-ratio" class="text-[10px] text-slate-400 mt-1">Vốn vay: 0.00 Tỷ (0%)</div>
         </div>
 
-        <!-- KPI 3 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Nợ Ngân Hàng / Tháng</span>
@@ -228,7 +239,6 @@
           <div class="text-[10px] text-slate-400 mt-1">Gốc + lãi trả góp đều (P&I)</div>
         </div>
 
-        <!-- KPI 4 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Dòng Tiền Ròng Thực Nhận</span>
@@ -238,7 +248,6 @@
           <div id="kpi-net-annual" class="text-[10px] text-slate-400 mt-1">Năm: 0 Tr VNĐ (Sau trả nợ)</div>
         </div>
 
-        <!-- KPI 5 -->
         <div class="bg-navy-900 text-white p-4 md:p-5 rounded-2xl border border-navy-800 shadow-md relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-400 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider text-gold-400">Cash-on-Cash Return</span>
@@ -248,7 +257,6 @@
           <div class="text-[10px] text-slate-300 mt-1">Hiệu suất trên tiền mặt tự có (CoCR)</div>
         </div>
 
-        <!-- KPI 6 -->
         <div class="bg-navy-900 text-white p-4 md:p-5 rounded-2xl border border-navy-800 shadow-md relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-400 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider text-emerald-400">Hệ Số Phủ Nợ DSCR</span>
@@ -291,7 +299,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-xl md:text-2xl font-black text-navy-900">Danh Mục & Bảng Tính Dòng Tiền Thực Chiến</h2>
-          <p class="text-xs text-slate-500">Tích chọn 2 ô bất kỳ để so sánh đối chiếu trực tiếp các chỉ số Vốn, CoCR, Cap Rate, DSCR.</p>
+          <p class="text-xs text-slate-500">Tích chọn 2 ô để so sánh hoặc bấm nút "Dự phóng 5 năm" để mở bảng phân tích tăng trưởng tài sản.</p>
         </div>
         <div class="flex items-center space-x-2">
           <button onclick="openModal()" class="emerald-gradient hover:opacity-95 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-1.5 transition">
@@ -337,7 +345,7 @@
           <table class="w-full text-left text-xs md:text-sm">
             <thead class="bg-navy-900 text-slate-300 uppercase text-[10px] font-black tracking-wider">
               <tr>
-                <th class="py-4 px-3 text-center w-12">Chọn</th>
+                <th class="py-4 px-3 text-center w-12">So Sánh</th>
                 <th class="py-4 px-4">Tên BĐS & Vị Trí</th>
                 <th class="py-4 px-4 text-right">Tổng Vốn / Vốn Tự Có</th>
                 <th class="py-4 px-4 text-right">Khoản Vay & Lãi Vay</th>
@@ -366,13 +374,13 @@
       </div>
     </section>
 
-    <!-- ================= TAB 3: TÍNH NĂNG TRỌNG TÂM - SO SÁNH 2 TÀI SẢN ================= -->
+    <!-- ================= TAB 3: SO SÁNH 2 TÀI SẢN ================= -->
     <section id="tab-compare" class="hidden space-y-5">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-xl md:text-2xl font-black text-navy-900 flex items-center space-x-2">
             <i data-lucide="columns-2" class="w-6 h-6 text-emerald-600"></i>
-            <span>Bảng So Sánh Đối Chiếu 2 Bất Động Sản</span>
+            <span>Bảng So Sánh Đối Chiếu 2 Bất Động Sản (Side-by-Side)</span>
           </h2>
           <p class="text-xs text-slate-500">Đối chiếu trực quan Vốn đầu tư, Cash-on-Cash (CoCR), Cap Rate và hệ số an toàn phủ nợ DSCR.</p>
         </div>
@@ -384,7 +392,7 @@
         </div>
       </div>
 
-      <!-- Selector Chọn 2 BĐS nhanh hoặc nhận từ checkbox -->
+      <!-- Selector Chọn 2 BĐS -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-navy-900 text-white p-4 rounded-2xl border border-navy-800 space-y-2">
           <div class="flex items-center justify-between">
@@ -433,7 +441,251 @@
       </div>
     </section>
 
-    <!-- ================= TAB 4: BÁO CÁO THẨM ĐỊNH & XUẤT PDF ================= -->
+    <!-- ================= TAB 4: GIẢ LẬP ĐÀM PHÁN (SLIDERS) ================= -->
+    <section id="tab-simulator" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black text-navy-900 flex items-center space-x-2">
+            <i data-lucide="sliders" class="w-6 h-6 text-emerald-600"></i>
+            <span>Công Cụ Giả Lập Đàm Phán Nhanh (Negotiation Simulator)</span>
+          </h2>
+          <p class="text-xs text-slate-500">Kéo trượt để mô phỏng kịch bản ép giá mua, tăng tỷ lệ vay hoặc tăng giá thuê để thấy tác động tức thì lên dòng tiền.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-bold text-slate-600">Chọn BĐS làm gốc:</label>
+          <select id="sim-property-selector" onchange="initSimulatorProperty(this.value)" class="p-2 text-xs bg-white border border-slate-300 rounded-xl font-bold focus:border-gold-500 shadow-sm">
+            <!-- options js -->
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div class="lg:col-span-7 bg-white p-5 md:p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-extrabold text-navy-900 text-sm md:text-base">Các Đòn Bẩy Đàm Phán & Cấu Trúc Vay</h3>
+            <button onclick="resetSimulator()" class="text-xs text-slate-500 hover:text-gold-600 flex items-center space-x-1 font-bold">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>Khôi phục gốc</span>
+            </button>
+          </div>
+
+          <!-- Slider 1 -->
+          <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-700">1. Giá Mua Sau Đàm Phán:</span>
+              <span id="sim-disp-price" class="font-black text-navy-900 text-sm">0 Tỷ</span>
+            </div>
+            <input type="range" id="sim-slider-price" min="1" max="50" step="0.2" oninput="runSimulation()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+              <span id="sim-min-price">1 Tỷ</span>
+              <span id="sim-price-diff" class="text-emerald-700 font-bold">Ép giá: 0 Tỷ (0%)</span>
+              <span id="sim-max-price">50 Tỷ</span>
+            </div>
+          </div>
+
+          <!-- Slider 2 -->
+          <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-700">2. Tỷ Lệ Vay Ngân Hàng (LTV %):</span>
+              <span id="sim-disp-ltv" class="font-black text-rose-600 text-sm">0% (0 Tỷ)</span>
+            </div>
+            <input type="range" id="sim-slider-ltv" min="0" max="80" step="5" oninput="runSimulation()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+              <span>0% (Không vay)</span>
+              <span>Đòn bẩy 50%</span>
+              <span>80% (Tối đa)</span>
+            </div>
+          </div>
+
+          <!-- Slider 3 -->
+          <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-700">3. Doanh Thu Thuê Dự Kiến / Tháng:</span>
+              <span id="sim-disp-rent" class="font-black text-emerald-600 text-sm">0 Tr/th</span>
+            </div>
+            <input type="range" id="sim-slider-rent" min="5" max="300" step="2" oninput="runSimulation()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+              <span id="sim-min-rent">5 Tr</span>
+              <span id="sim-rent-diff" class="text-slate-500 font-bold">Ban đầu: 0 Tr</span>
+              <span id="sim-max-rent">300 Tr</span>
+            </div>
+          </div>
+
+          <!-- Slider 4 -->
+          <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-700">4. Lãi Suất Vay Ngân Hàng (%/năm):</span>
+              <span id="sim-disp-rate" class="font-black text-navy-900 text-sm">8.5%</span>
+            </div>
+            <input type="range" id="sim-slider-rate" min="6.0" max="14.0" step="0.25" oninput="runSimulation()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-400 font-semibold">
+              <span>6.0% (Ưu đãi)</span>
+              <span>9.0% (Thực tế)</span>
+              <span>14.0% (Thả nổi căng)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-navy-900 text-white p-5 md:p-6 rounded-3xl border border-navy-800 shadow-xl flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between border-b border-navy-800 pb-3">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-gold-400">HIỆU QUẢ SAU ĐÀM PHÁN</span>
+                <h3 class="font-black text-base text-white">Bảng Kết Quả Định Lượng</h3>
+              </div>
+              <span id="sim-risk-badge" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase">Đòn bẩy</span>
+            </div>
+
+            <div class="space-y-3 mt-4 text-xs">
+              <div class="p-3 bg-navy-850 rounded-xl border border-navy-800 flex justify-between items-center">
+                <div>
+                  <span class="text-slate-400 block text-[10px] uppercase font-bold">VỐN TỰ CÓ CẦN BỎ RA</span>
+                  <span id="sim-out-equity" class="text-base font-black text-white">0 Tỷ</span>
+                </div>
+                <span id="sim-diff-equity" class="text-xs font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400">Tiết kiệm: 0 Tỷ</span>
+              </div>
+
+              <div class="p-3 bg-navy-850 rounded-xl border border-navy-800 flex justify-between items-center">
+                <div>
+                  <span class="text-slate-400 block text-[10px] uppercase font-bold">DÒNG TIỀN RÒNG/THÁNG</span>
+                  <span id="sim-out-net" class="text-base font-black text-emerald-400">+0 Tr/th</span>
+                </div>
+                <span id="sim-diff-net" class="text-xs font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300">Chênh lệch: 0 Tr</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-center">
+                <div class="p-2.5 bg-navy-850 rounded-xl border border-navy-800">
+                  <span class="text-[10px] text-slate-400 block font-bold">CASH-ON-CASH (CoCR)</span>
+                  <span id="sim-out-coc" class="text-sm font-black text-gold-400">0.0%</span>
+                  <span id="sim-old-coc" class="text-[10px] text-slate-500 block">Gốc: 0%</span>
+                </div>
+                <div class="p-2.5 bg-navy-850 rounded-xl border border-navy-800">
+                  <span class="text-[10px] text-slate-400 block font-bold">HỆ SỐ PHỦ NỢ DSCR</span>
+                  <span id="sim-out-dscr" class="text-sm font-black text-white">0.00x</span>
+                  <span id="sim-old-dscr" class="text-[10px] text-slate-500 block">Gốc: 0.00x</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-gold-600/10 border border-gold-600/30 rounded-2xl text-xs space-y-1">
+            <span class="font-extrabold text-gold-400 block text-[11px] uppercase flex items-center space-x-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>Giá trị đàm phán tạo ra cho Nhà đầu tư:</span>
+            </span>
+            <p id="sim-sales-pitch" class="text-slate-300 leading-relaxed text-[11px]">
+              Kéo thanh trượt để xem bạn có thể giúp nhà đầu tư tiết kiệm bao nhiêu vốn và tăng thêm bao nhiêu dòng tiền ròng mỗi tháng.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: BẢNG DỰ PHÓNG DÒNG TIỀN VÀ TĂNG TRƯỞNG TÀI SẢN 5 NĂM (NÂNG CẤP MỚI) ================= -->
+    <section id="tab-projection" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black text-navy-900 flex items-center space-x-2">
+            <i data-lucide="trending-up" class="w-6 h-6 text-blue-600"></i>
+            <span>Bảng Dự Phóng Dòng Tiền & Tăng Trưởng Tài Sản 5 Năm</span>
+          </h2>
+          <p class="text-xs text-slate-500">Mô hình hóa lũy kế: Tăng trưởng vốn BĐS Đà Nẵng + Trừ dần nợ gốc ngân hàng + Tích lũy tiền thuê thực nhận.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-bold text-slate-600">Chọn BĐS Dự Phóng:</label>
+          <select id="proj-property-selector" onchange="run5YearProjection(this.value)" class="p-2 text-xs bg-white border border-slate-300 rounded-xl font-bold focus:border-gold-500 shadow-sm">
+            <!-- options js -->
+          </select>
+        </div>
+      </div>
+
+      <!-- 2 Tham số Giả định Nhanh theo yêu cầu -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+        <!-- Tham số 1: Tỷ lệ tăng giá BĐS/năm (Mặc định 6%) -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+            <span>Tỷ Lệ Tăng Giá BĐS / Năm:</span>
+            <span id="proj-disp-appr" class="font-black text-navy-900 text-sm">6.0%</span>
+          </div>
+          <input type="range" id="proj-appreciation-rate" min="1" max="18" step="0.5" value="6.0" oninput="updateProjectionParam()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          <span class="text-[10px] text-slate-400 mt-1 block">Mặc định: 6%/năm (Đà Nẵng ổn định)</span>
+        </div>
+
+        <!-- Tham số 2: Tăng giá thuê/năm (Mặc định 3%) -->
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <div class="flex justify-between items-center text-xs font-bold text-slate-700 mb-1">
+            <span>Tăng Giá Cho Thuê / Năm:</span>
+            <span id="proj-disp-rent-esc" class="font-black text-emerald-600 text-sm">3.0%</span>
+          </div>
+          <input type="range" id="proj-rent-escalation" min="0" max="10" step="0.5" value="3.0" oninput="updateProjectionParam()" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          <span class="text-[10px] text-slate-400 mt-1 block">Mặc định: 3%/năm (Chu kỳ điều chỉnh hợp đồng)</span>
+        </div>
+
+        <!-- KPI Tổng Tài Sản Ròng 5 Năm -->
+        <div class="bg-navy-900 text-white p-3.5 rounded-xl border border-navy-800 text-center">
+          <span class="text-[10px] text-gold-400 font-bold block uppercase tracking-wider">Tổng Tài Sản Ròng Năm 5</span>
+          <span id="proj-net-worth-5y" class="text-xl font-black text-white mt-0.5 block">0.00 Tỷ</span>
+          <span id="proj-equity-growth-5y" class="text-[10px] text-emerald-400 font-semibold block">+0.00 Tỷ so với vốn ban đầu</span>
+        </div>
+
+        <!-- KPI Tỷ Suất Sinh Lời Lũy Kế 5 Năm -->
+        <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 text-center">
+          <span class="text-[10px] text-emerald-800 font-bold block uppercase tracking-wider">Tỷ Suất ROI Lũy Kế 5 Năm</span>
+          <span id="proj-total-roi-5y" class="text-xl font-black text-emerald-700 mt-0.5 block">+0.0%</span>
+          <span id="proj-annualized-roi" class="text-[10px] text-emerald-600 font-semibold block">Tương đương: 0%/năm</span>
+        </div>
+      </div>
+
+      <!-- Bảng Tính Chi Tiết Từng Năm: 6 Cột Hàm Tính Toán Chuẩn Xác -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+        <div class="p-4 md:p-5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="font-black text-navy-900 text-sm md:text-base uppercase tracking-wider flex items-center space-x-2">
+              <i data-lucide="table" class="w-4 h-4 text-blue-600"></i>
+              <span>Bảng Dự Phóng Tăng Trưởng Tài Sản Chi Tiết (Năm 1 -> Năm 5)</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Giá trị BĐS - Dư nợ ngân hàng + Dòng tiền thuê tích lũy = Tổng tài sản ròng tích lũy</p>
+          </div>
+          <span class="text-xs bg-navy-900 text-gold-400 font-bold px-3 py-1 rounded-full border border-navy-800">
+            5-Year Wealth Accumulation
+          </span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs md:text-sm">
+            <thead class="bg-navy-900 text-slate-300 uppercase text-[10px] font-black tracking-wider">
+              <tr>
+                <th class="py-4 px-4">1. Năm</th>
+                <th class="py-4 px-4 text-right">2. Giá Trị BĐS Ước Tính (Tỷ)</th>
+                <th class="py-4 px-4 text-right">3. Dư Nợ Ngân Hàng (Tỷ)</th>
+                <th class="py-4 px-4 text-right">4. Vốn Chủ Sở Hữu (Tỷ)</th>
+                <th class="py-4 px-4 text-right">5. Dòng Tiền Ròng Tích Lũy (Tr)</th>
+                <th class="py-4 px-4 text-right text-emerald-400">6. TỔNG TÀI SẢN RÒNG (Tỷ)</th>
+                <th class="py-4 px-4 text-center">Tỷ Suất ROI</th>
+              </tr>
+            </thead>
+            <tbody id="projection-table-body" class="divide-y divide-slate-100">
+              <!-- Render JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Biểu Đồ Trực Quan Tăng Trưởng Tài Sản 5 Năm -->
+      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-extrabold text-navy-900 text-sm md:text-base">Mô Hình Đường Cong Tích Lũy Tài Sản (Năm 0 -> Năm 5)</h3>
+            <p class="text-xs text-slate-400">Quan sát hiệu ứng kép khi dư nợ giảm dần và giá trị BĐS tăng trưởng bền vững</p>
+          </div>
+          <span class="text-xs bg-slate-100 font-bold text-slate-700 px-3 py-1 rounded-full">Đơn vị: Tỷ VNĐ</span>
+        </div>
+        <div class="h-64 sm:h-72 w-full relative">
+          <canvas id="chart-projection-5y"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 6: BÁO CÁO THẨM ĐỊNH & XUẤT PDF ================= -->
     <section id="tab-report" class="hidden space-y-5">
       <div class="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -514,7 +766,6 @@
 
         <!-- Bảng Chi Tiết Cấu Trúc Tài Chính & Vận Hành -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-          <!-- Cột 1 -->
           <div class="space-y-3">
             <h4 class="font-black text-navy-900 uppercase text-[11px] border-b pb-1 flex items-center space-x-1.5">
               <i data-lucide="layers" class="w-4 h-4 text-gold-600"></i>
@@ -552,7 +803,6 @@
             </div>
           </div>
 
-          <!-- Cột 2 -->
           <div class="space-y-3">
             <h4 class="font-black text-navy-900 uppercase text-[11px] border-b pb-1 flex items-center space-x-1.5">
               <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
@@ -591,7 +841,6 @@
           </div>
         </div>
 
-        <!-- Nhận định & Cảnh Báo Chiến Lược Đầu Tư -->
         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
           <h4 class="font-black text-navy-900 uppercase text-[11px] flex items-center space-x-1.5">
             <i data-lucide="shield-check" class="w-4 h-4 text-gold-600"></i>
@@ -602,7 +851,6 @@
           </p>
         </div>
 
-        <!-- Chữ Ký Xác Nhận -->
         <div class="pt-6 border-t border-slate-200 flex justify-between text-xs text-center text-slate-600">
           <div>
             <p class="font-bold">ĐẠI DIỆN NHÀ ĐẦU TƯ</p>
@@ -635,27 +883,35 @@
   </div>
 
   <!-- ================= BOTTOM NAVIGATION MOBILE (iPhone) ================= -->
-  <nav class="no-print md:hidden fixed bottom-0 left-0 right-0 bg-navy-900 border-t border-navy-800 text-slate-400 flex justify-around items-center py-2 z-40">
-    <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center space-y-1 text-emerald-500 font-bold">
-      <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+  <nav class="no-print md:hidden fixed bottom-0 left-0 right-0 bg-navy-900 border-t border-navy-800 text-slate-400 flex justify-around items-center py-2 z-40 overflow-x-auto">
+    <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center space-y-1 text-emerald-500 font-bold min-w-[55px]">
+      <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
       <span class="text-[9px]">Dashboard</span>
     </button>
-    <button onclick="switchTab('properties')" id="bnav-properties" class="flex flex-col items-center space-y-1 hover:text-white">
+    <button onclick="switchTab('properties')" id="bnav-properties" class="flex flex-col items-center space-y-1 hover:text-white min-w-[55px]">
       <div class="relative">
-        <i data-lucide="calculator" class="w-5 h-5"></i>
+        <i data-lucide="calculator" class="w-4 h-4"></i>
         <span id="badge-count-mobile" class="absolute -top-1.5 -right-2 bg-gold-600 text-navy-950 text-[9px] font-black rounded-full px-1">0</span>
       </div>
       <span class="text-[9px]">Dòng Tiền</span>
     </button>
-    <button onclick="switchTab('compare')" id="bnav-compare" class="flex flex-col items-center space-y-1 hover:text-white">
+    <button onclick="switchTab('compare')" id="bnav-compare" class="flex flex-col items-center space-y-1 hover:text-white min-w-[55px]">
       <div class="relative">
-        <i data-lucide="columns-2" class="w-5 h-5 text-emerald-400"></i>
-        <span id="badge-compare-mobile" class="absolute -top-1.5 -right-2 bg-emerald-600 text-white text-[9px] font-black rounded-full px-1">0</span>
+        <i data-lucide="columns-2" class="w-4 h-4 text-amber-400"></i>
+        <span id="badge-compare-mobile" class="absolute -top-1.5 -right-2 bg-amber-600 text-white text-[9px] font-black rounded-full px-1">0</span>
       </div>
       <span class="text-[9px]">So Sánh</span>
     </button>
-    <button onclick="switchTab('report')" id="bnav-report" class="flex flex-col items-center space-y-1 hover:text-white">
-      <i data-lucide="printer" class="w-5 h-5 text-slate-400"></i>
+    <button onclick="switchTab('simulator')" id="bnav-simulator" class="flex flex-col items-center space-y-1 hover:text-white min-w-[55px]">
+      <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i>
+      <span class="text-[9px]">Giả Lập</span>
+    </button>
+    <button onclick="switchTab('projection')" id="bnav-projection" class="flex flex-col items-center space-y-1 hover:text-white min-w-[55px]">
+      <i data-lucide="trending-up" class="w-4 h-4 text-blue-400"></i>
+      <span class="text-[9px]">Dự Phóng</span>
+    </button>
+    <button onclick="switchTab('report')" id="bnav-report" class="flex flex-col items-center space-y-1 hover:text-white min-w-[55px]">
+      <i data-lucide="printer" class="w-4 h-4 text-slate-400"></i>
       <span class="text-[9px]">In PDF</span>
     </button>
   </nav>
@@ -802,11 +1058,11 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT FINANCIAL CORE & COMPARISON ================= -->
+  <!-- ================= JAVASCRIPT FINANCIAL CORE & SALES WEAPONS ================= -->
   <script>
-    const STORAGE_KEY = 'HAU_PROPERTIES_PRO_FINANCE_V6';
+    const STORAGE_KEY = 'HAU_PROPERTIES_PRO_FINANCE_V8';
 
-    // Dữ liệu mẫu thị trường Đà Nẵng
+    // Dữ liệu mẫu thực tế tại Đà Nẵng
     const INITIAL_PROPERTIES = [
       {
         id: 'prop-dn-1',
@@ -856,9 +1112,12 @@
       properties: [],
       currentTab: 'dashboard',
       selectedReportId: null,
-      selectedCompareIds: [], // Chứa tối đa 2 ID để so sánh
+      selectedCompareIds: [],
+      selectedProjectionId: null,
+      simulatorBase: null,
       chartCashflow: null,
-      chartCapital: null
+      chartCapital: null,
+      chartProjection: null
     };
 
     // ================= 1. FINANCIAL ENGINE BẤT ĐỘNG SẢN =================
@@ -998,7 +1257,7 @@
       }
       if (state.properties.length > 0) {
         state.selectedReportId = state.properties[0].id;
-        // Mặc định chọn 2 tài sản đầu tiên nếu có
+        state.selectedProjectionId = state.properties[0].id;
         state.selectedCompareIds = state.properties.slice(0, 2).map(p => p.id);
       }
     }
@@ -1013,6 +1272,8 @@
       renderCharts();
       populateAllSelectors();
       renderComparison();
+      initSimulator();
+      run5YearProjection(state.selectedProjectionId);
       updateCompareUI();
       updateBadgeCounts();
       initLucide();
@@ -1027,9 +1288,11 @@
     function populateAllSelectors() {
       const selA = document.getElementById('compare-select-a');
       const selB = document.getElementById('compare-select-b');
+      const selSim = document.getElementById('sim-property-selector');
+      const selProj = document.getElementById('proj-property-selector');
       const selRep = document.getElementById('report-property-selector');
 
-      const selectors = [selA, selB, selRep];
+      const selectors = [selA, selB, selSim, selProj, selRep];
       selectors.forEach(s => { if(s) s.innerHTML = ''; });
 
       if (state.properties.length === 0) {
@@ -1054,6 +1317,8 @@
         if (selA) selA.value = state.properties[0].id;
         if (selB) selB.value = state.properties[1].id;
       }
+      if (selSim && state.properties[0]) selSim.value = state.properties[0].id;
+      if (selProj && state.selectedProjectionId) selProj.value = state.selectedProjectionId;
       if (selRep && state.selectedReportId) selRep.value = state.selectedReportId;
     }
 
@@ -1142,22 +1407,22 @@
 
         // 1. Desktop Row
         const tr = document.createElement('tr');
-        tr.className = `hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm ${isChecked ? 'bg-emerald-50/50' : ''}`;
+        tr.className = `hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm ${isChecked ? 'bg-amber-50/40' : ''}`;
         tr.innerHTML = `
           <td class="py-4 px-3 text-center">
             <input 
               type="checkbox" 
-              class="compare-checkbox w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
+              class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
               onchange="toggleCompareCheck('${p.id}')" 
               ${isChecked ? 'checked' : ''}
-              title="Tích chọn để so sánh đối chiếu"
+              title="Tích chọn 2 BĐS để so sánh đối chiếu"
             />
           </td>
           <td class="py-4 px-4">
             <div class="font-extrabold text-navy-900">${p.name}</div>
             <div class="text-[11px] text-slate-500 mt-0.5 flex items-center space-x-1.5">
               <span class="inline-block px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-700">${p.district}</span>
-              ${p.notes ? `<span class="truncate max-w-[200px] text-slate-400" title="${p.notes}">• ${p.notes}</span>` : ''}
+              ${p.notes ? `<span class="truncate max-w-[180px] text-slate-400" title="${p.notes}">• ${p.notes}</span>` : ''}
             </div>
           </td>
           <td class="py-4 px-4 text-right">
@@ -1189,6 +1454,14 @@
           </td>
           <td class="py-4 px-5 text-center">
             <div class="flex items-center justify-center space-x-1.5">
+              <!-- Nút Dự Phóng 5 Năm Trực Tiếp theo yêu cầu -->
+              <button onclick="launchProjectionWithProp('${p.id}')" title="Xem Bảng Dự Phóng 5 Năm BĐS này" class="p-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition font-bold text-xs flex items-center space-x-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                <span class="hidden lg:inline text-[10px]">Dự phóng 5 năm</span>
+              </button>
+              <button onclick="launchSimulatorWithProp('${p.id}')" title="Giả lập đàm phán giá" class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition">
+                <i data-lucide="sliders" class="w-4 h-4"></i>
+              </button>
               <button onclick="viewReport('${p.id}')" title="Xem Báo Cáo In / PDF" class="p-1.5 text-navy-900 hover:bg-slate-200 rounded-lg transition">
                 <i data-lucide="printer" class="w-4 h-4 text-gold-600"></i>
               </button>
@@ -1205,13 +1478,13 @@
 
         // 2. Mobile iPhone Card
         const card = document.createElement('div');
-        card.className = `p-4 bg-white rounded-2xl border ${isChecked ? 'border-emerald-500 bg-emerald-50/20' : 'border-slate-200'} shadow-sm space-y-2.5`;
+        card.className = `p-4 bg-white rounded-2xl border ${isChecked ? 'border-amber-500 bg-amber-50/20' : 'border-slate-200'} shadow-sm space-y-2.5`;
         card.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div class="flex items-start space-x-2.5">
               <input 
                 type="checkbox" 
-                class="compare-checkbox w-4 h-4 mt-1 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
+                class="w-4 h-4 mt-1 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
                 onchange="toggleCompareCheck('${p.id}')" 
                 ${isChecked ? 'checked' : ''}
               />
@@ -1244,11 +1517,17 @@
             ${risk.label}
           </div>
 
-          <div class="flex items-center justify-between pt-1">
-            <button onclick="toggleCompareCheck('${p.id}')" class="text-xs font-bold text-emerald-700 flex items-center space-x-1">
-              <i data-lucide="columns-2" class="w-3.5 h-3.5"></i>
-              <span>${isChecked ? 'Đang chọn so sánh' : 'Tích chọn so sánh'}</span>
-            </button>
+          <div class="flex flex-wrap items-center justify-between gap-1 pt-1">
+            <div class="flex items-center space-x-2">
+              <button onclick="launchProjectionWithProp('${p.id}')" class="text-xs font-black text-blue-700 flex items-center space-x-1 bg-blue-50 px-2.5 py-1 rounded-lg">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                <span>Dự phóng 5 năm</span>
+              </button>
+              <button onclick="launchSimulatorWithProp('${p.id}')" class="text-xs font-black text-emerald-700 flex items-center space-x-1">
+                <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                <span>Giả lập</span>
+              </button>
+            </div>
             <div class="flex items-center space-x-1">
               <button onclick="viewReport('${p.id}')" class="p-1.5 text-gold-600 hover:bg-gold-50 rounded-lg">
                 <i data-lucide="printer" class="w-4 h-4"></i>
@@ -1342,14 +1621,13 @@
       });
     }
 
-    // ================= 6. TÍNH NĂNG TÍCH CHỌN & SO SÁNH 2 TÀI SẢN =================
+    // ================= 6. VŨ KHÍ 1: SO SÁNH 2 TÀI SẢN (SIDE-BY-SIDE) =================
     function toggleCompareCheck(id) {
       const idx = state.selectedCompareIds.indexOf(id);
       if (idx !== -1) {
         state.selectedCompareIds.splice(idx, 1);
       } else {
         if (state.selectedCompareIds.length >= 2) {
-          // Bỏ chọn cái đầu tiên và thêm cái mới vào
           state.selectedCompareIds.shift();
         }
         state.selectedCompareIds.push(id);
@@ -1386,7 +1664,6 @@
         floatBar.classList.remove('flex');
       }
 
-      // Cập nhật dropdowns bên Tab So Sánh
       const selA = document.getElementById('compare-select-a');
       const selB = document.getElementById('compare-select-b');
       if (count >= 1 && selA) selA.value = state.selectedCompareIds[0];
@@ -1436,7 +1713,6 @@
       document.getElementById('comp-head-a').textContent = pA.name;
       document.getElementById('comp-head-b').textContent = pB.name;
 
-      // Các chỉ số tính toán
       const capA = Engine.calcTotalCapital(pA), capB = Engine.calcTotalCapital(pB);
       const eqA = Engine.calcEquity(pA), eqB = Engine.calcEquity(pB);
       const loanA = Number(pA.loanAmount || 0), loanB = Number(pB.loanAmount || 0);
@@ -1452,113 +1728,21 @@
       const riskA = Engine.getRiskEvaluation(pA), riskB = Engine.getRiskEvaluation(pB);
 
       const rows = [
-        { 
-          label: 'Quận / Khu Vực Đà Nẵng', 
-          valA: pA.district, 
-          valB: pB.district, 
-          highlight: null 
-        },
-        { 
-          label: 'Giá Mua Theo Hợp Đồng', 
-          valA: `${pA.purchasePrice} Tỷ`, 
-          valB: `${pB.purchasePrice} Tỷ`, 
-          highlight: null 
-        },
-        { 
-          label: 'Chi Phí Cải Tạo / Hoàn Thiện', 
-          valA: `${pA.renovationCost || 0} Tỷ`, 
-          valB: `${pB.renovationCost || 0} Tỷ`, 
-          highlight: null 
-        },
-        { 
-          label: '1. TỔNG VỐN ĐẦU TƯ (Total Capital)', 
-          valA: `${capA.toFixed(2)} Tỷ`, 
-          valB: `${capB.toFixed(2)} Tỷ`, 
-          highlight: null,
-          isBold: true
-        },
-        { 
-          label: '2. VỐN TỰ CÓ BỎ RA (Equity Thực Tế)', 
-          valA: `${eqA.toFixed(2)} Tỷ`, 
-          valB: `${eqB.toFixed(2)} Tỷ`, 
-          highlight: eqA < eqB ? 'A' : 'B',
-          isBold: true,
-          note: 'Phương án cần ít vốn tự có hơn'
-        },
-        { 
-          label: 'Hạn Mức Vay Ngân Hàng (LTV %)', 
-          valA: `${loanA.toFixed(2)} Tỷ (${ltvA.toFixed(1)}%)`, 
-          valB: `${loanB.toFixed(2)} Tỷ (${ltvB.toFixed(1)}%)`, 
-          highlight: null 
-        },
-        { 
-          label: 'Lãi Suất Vay & Kỳ Hạn', 
-          valA: `${pA.interestRate || 0}% • ${pA.loanTermYears || 20} năm`, 
-          valB: `${pB.interestRate || 0}% • ${pB.loanTermYears || 20} năm`, 
-          highlight: null 
-        },
-        { 
-          label: 'Gốc + Lãi Trả Góp / Tháng (P&I)', 
-          valA: `-${debtA.toFixed(1)} Tr/th`, 
-          valB: `-${debtB.toFixed(1)} Tr/th`, 
-          highlight: debtA < debtB ? 'A' : 'B',
-          note: 'Áp lực trả nợ thấp hơn'
-        },
-        { 
-          label: 'Doanh Thu Thuê / Tháng (100% lấp đầy)', 
-          valA: `${rentA} Tr/th`, 
-          valB: `${rentB} Tr/th`, 
-          highlight: rentA > rentB ? 'A' : 'B' 
-        },
-        { 
-          label: 'Thu Nhập Hoạt Động Ròng (NOI)', 
-          valA: `${noiA.toFixed(1)} Tr/th`, 
-          valB: `${noiB.toFixed(1)} Tr/th`, 
-          highlight: noiA > noiB ? 'A' : 'B' 
-        },
-        { 
-          label: '3. DÒNG TIỀN RÒNG THỰC NHẬN / THÁNG', 
-          valA: `${(netA >= 0 ? '+' : '') + netA.toFixed(1)} Tr/th`, 
-          valB: `${(netB >= 0 ? '+' : '') + netB.toFixed(1)} Tr/th`, 
-          highlight: netA > netB ? 'A' : 'B',
-          isKey: true,
-          note: 'Dòng tiền thặng dư vào túi mỗi tháng'
-        },
-        { 
-          label: 'Dòng Tiền Ròng Thực Nhận / Năm', 
-          valA: `${(netA * 12).toFixed(1)} Tr/năm`, 
-          valB: `${(netB * 12).toFixed(1)} Tr/năm`, 
-          highlight: (netA * 12) > (netB * 12) ? 'A' : 'B' 
-        },
-        { 
-          label: '4. CASH-ON-CASH RETURN (CoCR %)', 
-          valA: `${cocA.toFixed(1)}% / năm`, 
-          valB: `${cocB.toFixed(1)}% / năm`, 
-          highlight: cocA > cocB ? 'A' : 'B',
-          isKey: true,
-          note: 'Tỷ suất hoàn vốn trên tiền mặt tự có'
-        },
-        { 
-          label: '5. TỶ SUẤT CAP RATE (Không Đòn Bẩy)', 
-          valA: `${capRateA.toFixed(2)}% / năm`, 
-          valB: `${capRateB.toFixed(2)}% / năm`, 
-          highlight: capRateA > capRateB ? 'A' : 'B' 
-        },
-        { 
-          label: '6. HỆ SỐ PHỦ NỢ (DSCR)', 
-          valA: dscrA === Infinity ? '100% Vốn Tự Có' : `${dscrA.toFixed(2)}x`, 
-          valB: dscrB === Infinity ? '100% Vốn Tự Có' : `${dscrB.toFixed(2)}x`, 
-          highlight: dscrA > dscrB ? 'A' : 'B',
-          isKey: true,
-          note: 'Khả năng trả nợ (>1.25x là an toàn)'
-        },
-        { 
-          label: 'Đánh Giá Rủi Ro Thực Chiến', 
-          valA: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskA.badgeClass}">${riskA.shortLabel}</span>`, 
-          valB: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskB.badgeClass}">${riskB.shortLabel}</span>`, 
-          highlight: null,
-          isHTML: true 
-        }
+        { label: 'Quận / Khu Vực Đà Nẵng', valA: pA.district, valB: pB.district, highlight: null },
+        { label: 'Giá Mua Theo Hợp Đồng', valA: `${pA.purchasePrice} Tỷ`, valB: `${pB.purchasePrice} Tỷ`, highlight: null },
+        { label: 'Chi Phí Cải Tạo / Hoàn Thiện', valA: `${pA.renovationCost || 0} Tỷ`, valB: `${pB.renovationCost || 0} Tỷ`, highlight: null },
+        { label: '1. TỔNG VỐN ĐẦU TƯ (Total Capital)', valA: `${capA.toFixed(2)} Tỷ`, valB: `${capB.toFixed(2)} Tỷ`, highlight: null, isBold: true },
+        { label: '2. VỐN TỰ CÓ BỎ RA (Equity Thực Tế)', valA: `${eqA.toFixed(2)} Tỷ`, valB: `${eqB.toFixed(2)} Tỷ`, highlight: eqA < eqB ? 'A' : 'B', isBold: true, note: 'Phương án cần ít vốn tự có hơn' },
+        { label: 'Hạn Mức Vay Ngân Hàng (LTV %)', valA: `${loanA.toFixed(2)} Tỷ (${ltvA.toFixed(1)}%)`, valB: `${loanB.toFixed(2)} Tỷ (${ltvB.toFixed(1)}%)`, highlight: null },
+        { label: 'Lãi Suất Vay & Kỳ Hạn', valA: `${pA.interestRate || 0}% • ${pA.loanTermYears || 20} năm`, valB: `${pB.interestRate || 0}% • ${pB.loanTermYears || 20} năm`, highlight: null },
+        { label: 'Gốc + Lãi Trả Góp / Tháng (P&I)', valA: `-${debtA.toFixed(1)} Tr/th`, valB: `-${debtB.toFixed(1)} Tr/th`, highlight: debtA < debtB ? 'A' : 'B', note: 'Áp lực trả nợ thấp hơn' },
+        { label: 'Doanh Thu Thuê / Tháng (100% lấp đầy)', valA: `${rentA} Tr/th`, valB: `${rentB} Tr/th`, highlight: rentA > rentB ? 'A' : 'B' },
+        { label: 'Thu Nhập Hoạt Động Ròng (NOI)', valA: `${noiA.toFixed(1)} Tr/th`, valB: `${noiB.toFixed(1)} Tr/th`, highlight: noiA > noiB ? 'A' : 'B' },
+        { label: '3. DÒNG TIỀN RÒNG THỰC NHẬN / THÁNG', valA: `${(netA >= 0 ? '+' : '') + netA.toFixed(1)} Tr/th`, valB: `${(netB >= 0 ? '+' : '') + netB.toFixed(1)} Tr/th`, highlight: netA > netB ? 'A' : 'B', isKey: true, note: 'Dòng tiền thặng dư vào túi mỗi tháng' },
+        { label: '4. CASH-ON-CASH RETURN (CoCR %)', valA: `${cocA.toFixed(1)}% / năm`, valB: `${cocB.toFixed(1)}% / năm`, highlight: cocA > cocB ? 'A' : 'B', isKey: true, note: 'Tỷ suất hoàn vốn trên tiền mặt tự có' },
+        { label: '5. TỶ SUẤT CAP RATE (Không Đòn Bẩy)', valA: `${capRateA.toFixed(2)}% / năm`, valB: `${capRateB.toFixed(2)}% / năm`, highlight: capRateA > capRateB ? 'A' : 'B' },
+        { label: '6. HỆ SỐ PHỦ NỢ (DSCR)', valA: dscrA === Infinity ? '100% Vốn Tự Có' : `${dscrA.toFixed(2)}x`, valB: dscrB === Infinity ? '100% Vốn Tự Có' : `${dscrB.toFixed(2)}x`, highlight: dscrA > dscrB ? 'A' : 'B', isKey: true, note: 'Khả năng trả nợ (>1.25x là an toàn)' },
+        { label: 'Đánh Giá Rủi Ro Thực Chiến', valA: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskA.badgeClass}">${riskA.shortLabel}</span>`, valB: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskB.badgeClass}">${riskB.shortLabel}</span>`, highlight: null, isHTML: true }
       ];
 
       tbody.innerHTML = rows.map(r => {
@@ -1587,7 +1771,346 @@
       initLucide();
     }
 
-    // ================= 7. FORM MODAL & TÍNH TOÁN REAL-TIME =================
+    // ================= 7. VŨ KHÍ 2: GIẢ LẬP ĐÀM PHÁN (SLIDERS) =================
+    function initSimulator() {
+      if (state.properties.length === 0) return;
+      initSimulatorProperty(state.properties[0].id);
+    }
+
+    function launchSimulatorWithProp(id) {
+      switchTab('simulator');
+      document.getElementById('sim-property-selector').value = id;
+      initSimulatorProperty(id);
+    }
+
+    function initSimulatorProperty(id) {
+      const p = state.properties.find(x => x.id === id);
+      if (!p) return;
+
+      state.simulatorBase = { ...p };
+      const purchase = Number(p.purchasePrice) || 10;
+      const loan = Number(p.loanAmount) || 0;
+      const ltv = purchase > 0 ? Math.round((loan / purchase) * 100) : 0;
+      const rent = Number(p.monthlyRent) || 50;
+      const rate = Number(p.interestRate) || 8.5;
+
+      const sliderPrice = document.getElementById('sim-slider-price');
+      sliderPrice.min = Math.max(1, Math.round(purchase * 0.7 * 10) / 10);
+      sliderPrice.max = Math.round(purchase * 1.3 * 10) / 10;
+      sliderPrice.value = purchase;
+      document.getElementById('sim-min-price').textContent = sliderPrice.min + ' Tỷ';
+      document.getElementById('sim-max-price').textContent = sliderPrice.max + ' Tỷ';
+
+      const sliderLtv = document.getElementById('sim-slider-ltv');
+      sliderLtv.value = Math.min(80, ltv);
+
+      const sliderRent = document.getElementById('sim-slider-rent');
+      sliderRent.min = Math.max(5, Math.round(rent * 0.5));
+      sliderRent.max = Math.round(rent * 1.8);
+      sliderRent.value = rent;
+      document.getElementById('sim-min-rent').textContent = sliderRent.min + ' Tr';
+      document.getElementById('sim-max-rent').textContent = sliderRent.max + ' Tr';
+
+      const sliderRate = document.getElementById('sim-slider-rate');
+      sliderRate.value = rate;
+
+      runSimulation();
+    }
+
+    function resetSimulator() {
+      if (!state.simulatorBase) return;
+      initSimulatorProperty(state.simulatorBase.id);
+    }
+
+    function runSimulation() {
+      if (!state.simulatorBase) return;
+      const base = state.simulatorBase;
+
+      const simPrice = Number(document.getElementById('sim-slider-price').value);
+      const simLtv = Number(document.getElementById('sim-slider-ltv').value);
+      const simRent = Number(document.getElementById('sim-slider-rent').value);
+      const simRate = Number(document.getElementById('sim-slider-rate').value);
+      const simLoanAmount = Number(((simPrice * simLtv) / 100).toFixed(2));
+
+      document.getElementById('sim-disp-price').textContent = simPrice.toFixed(2) + ' Tỷ';
+      const priceDiff = simPrice - Number(base.purchasePrice);
+      const priceDiffPct = ((priceDiff / Number(base.purchasePrice)) * 100).toFixed(1);
+      
+      const diffEl = document.getElementById('sim-price-diff');
+      if (priceDiff < 0) {
+        diffEl.textContent = `Ép giá giảm: ${Math.abs(priceDiff).toFixed(2)} Tỷ (${Math.abs(priceDiffPct)}%)`;
+        diffEl.className = 'text-emerald-700 font-bold';
+      } else if (priceDiff > 0) {
+        diffEl.textContent = `Giá tăng: +${priceDiff.toFixed(2)} Tỷ (+${priceDiffPct}%)`;
+        diffEl.className = 'text-rose-600 font-bold';
+      } else {
+        diffEl.textContent = `Bằng giá gốc`;
+        diffEl.className = 'text-slate-500 font-bold';
+      }
+
+      document.getElementById('sim-disp-ltv').textContent = `${simLtv}% (${simLoanAmount.toFixed(2)} Tỷ)`;
+      document.getElementById('sim-disp-rent').textContent = `${simRent} Tr/th`;
+      document.getElementById('sim-rent-diff').textContent = `Gốc: ${base.monthlyRent} Tr`;
+      document.getElementById('sim-disp-rate').textContent = `${simRate.toFixed(2)}%`;
+
+      const simProp = {
+        ...base,
+        purchasePrice: simPrice,
+        loanAmount: simLoanAmount,
+        monthlyRent: simRent,
+        interestRate: simRate
+      };
+
+      const baseEquity = Engine.calcEquity(base);
+      const simEquity = Engine.calcEquity(simProp);
+      const baseNet = Engine.calcNetCashflowMonthly(base);
+      const simNet = Engine.calcNetCashflowMonthly(simProp);
+      const baseCoC = Engine.calcCashOnCash(base);
+      const simCoC = Engine.calcCashOnCash(simProp);
+      const baseDSCR = Engine.calcDSCR(base);
+      const simDSCR = Engine.calcDSCR(simProp);
+      const risk = Engine.getRiskEvaluation(simProp);
+
+      document.getElementById('sim-out-equity').textContent = `${simEquity.toFixed(2)} Tỷ`;
+      const eqDiff = simEquity - baseEquity;
+      const eqDiffEl = document.getElementById('sim-diff-equity');
+      if (eqDiff < 0) {
+        eqDiffEl.textContent = `Bớt vốn tự có: ${Math.abs(eqDiff).toFixed(2)} Tỷ`;
+        eqDiffEl.className = 'text-xs font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400';
+      } else {
+        eqDiffEl.textContent = `Cần thêm vốn: +${eqDiff.toFixed(2)} Tỷ`;
+        eqDiffEl.className = 'text-xs font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-300';
+      }
+
+      const netEl = document.getElementById('sim-out-net');
+      netEl.textContent = `${(simNet >= 0 ? '+' : '') + simNet.toFixed(1)} Tr/th`;
+      netEl.className = `text-base font-black ${simNet >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      const netDiff = simNet - baseNet;
+      const netDiffEl = document.getElementById('sim-diff-net');
+      netDiffEl.textContent = `${netDiff >= 0 ? '+' : ''}${netDiff.toFixed(1)} Tr/th so với gốc`;
+      netDiffEl.className = `text-xs font-bold px-2 py-0.5 rounded ${netDiff >= 0 ? 'bg-emerald-950 text-emerald-400' : 'bg-rose-950 text-rose-400'}`;
+
+      document.getElementById('sim-out-coc').textContent = `${simCoC.toFixed(1)}%`;
+      document.getElementById('sim-old-coc').textContent = `Gốc: ${baseCoC.toFixed(1)}%`;
+
+      document.getElementById('sim-out-dscr').textContent = simDSCR === Infinity ? '100% Vốn' : `${simDSCR.toFixed(2)}x`;
+      document.getElementById('sim-old-dscr').textContent = `Gốc: ${baseDSCR === Infinity ? 'N/A' : baseDSCR.toFixed(2) + 'x'}`;
+
+      const riskBadge = document.getElementById('sim-risk-badge');
+      riskBadge.textContent = risk.shortLabel;
+      riskBadge.className = `px-2.5 py-1 rounded-lg text-[10px] font-black uppercase ${risk.badgeClass}`;
+
+      const pitchEl = document.getElementById('sim-sales-pitch');
+      if (priceDiff < 0 || netDiff > 0) {
+        pitchEl.innerHTML = `💡 <b>ĐÒN BẨY ĐÀM PHÁN THÀNH CÔNG:</b> Nếu đàm phán mua với giá <b>${simPrice.toFixed(2)} Tỷ</b> (giảm ${Math.abs(priceDiff).toFixed(2)} Tỷ) và vay ${simLtv}%, nhà đầu tư giữ lại được <b>${Math.abs(eqDiff).toFixed(2)} Tỷ tiền mặt</b>, đồng thời dòng tiền ròng thực nhận đạt <b>${simNet.toFixed(1)} Tr/tháng</b>, đẩy Cash-on-Cash lên <b>${simCoC.toFixed(1)}%/năm</b>!`;
+      } else {
+        pitchEl.innerHTML = `Kéo thanh trượt để mô phỏng kịch bản ép giá mua hoặc tối ưu lãi suất ngân hàng để chốt deal với khách hàng.`;
+      }
+    }
+
+    // ================= 8. VŨ KHÍ 3: BẢNG DỰ PHÓNG DÒNG TIỀN VÀ TĂNG TRƯỞNG TÀI SẢN 5 NĂM (NÂNG CẤP CHUYÊN SÂU) =================
+    function launchProjectionWithProp(id) {
+      state.selectedProjectionId = id;
+      switchTab('projection');
+      const selector = document.getElementById('proj-property-selector');
+      if (selector) selector.value = id;
+      run5YearProjection(id);
+    }
+
+    function updateProjectionParam() {
+      const appr = document.getElementById('proj-appreciation-rate').value;
+      const rentEsc = document.getElementById('proj-rent-escalation').value;
+      document.getElementById('proj-disp-appr').textContent = Number(appr).toFixed(1) + '%';
+      document.getElementById('proj-disp-rent-esc').textContent = Number(rentEsc).toFixed(1) + '%';
+      run5YearProjection();
+    }
+
+    function run5YearProjection(customId = null) {
+      const id = customId || document.getElementById('proj-property-selector')?.value || (state.properties[0] ? state.properties[0].id : null);
+      if (!id) return;
+      state.selectedProjectionId = id;
+
+      const p = state.properties.find(x => x.id === id);
+      if (!p) return;
+
+      // 2 Tham số giả định nhanh theo yêu cầu
+      const gAppr = Number(document.getElementById('proj-appreciation-rate')?.value || 6.0) / 100; // Mặc định 6%/năm
+      const gRent = Number(document.getElementById('proj-rent-escalation')?.value || 3.0) / 100;   // Mặc định 3%/năm
+
+      const initialTotalCap = Engine.calcTotalCapital(p); // Tỷ
+      const initialLoanTy = Number(p.loanAmount || 0); // Tỷ
+      const initialEquity = Engine.calcEquity(p); // Tỷ
+      const annualDebtService = Engine.calcMonthlyDebtService(p) * 12; // Tr/năm
+      const monthlyRate = ((Number(p.interestRate) || 8.5) / 100) / 12;
+      const totalMonths = (Number(p.loanTermYears) || 20) * 12;
+
+      let curValue = initialTotalCap;
+      let curRent = Number(p.monthlyRent || 0);
+      let curOpex = Number(p.monthlyOpex || 0);
+      let cumulativeCashflowTr = 0;
+
+      const yearsData = [];
+      const labels = ['Bắt đầu', 'Năm 1', 'Năm 2', 'Năm 3', 'Năm 4', 'Năm 5'];
+      const netWorthTimeline = [initialEquity];
+      const propertyValueTimeline = [initialTotalCap];
+      const equityTimeline = [initialEquity];
+
+      for (let y = 1; y <= 5; y++) {
+        // Cột 2: Giá trị BĐS ước tính (Tăng trưởng tích lũy)
+        curValue = curValue * (1 + gAppr);
+        // Tăng giá thuê theo chu kỳ
+        curRent = curRent * (1 + gRent);
+        curOpex = curOpex * (1 + 0.025); // Lạm phát vận hành nhẹ 2.5%/năm
+
+        const egi = curRent * (1 - (p.vacancyRate || 5) / 100);
+        const noiAnnual = (egi - curOpex) * 12;
+        const netCashflowAnnual = noiAnnual - annualDebtService;
+        
+        // Cột 5: Dòng tiền ròng tích lũy (Tổng tiền thuê thực nhận sau khi trừ trả nợ)
+        cumulativeCashflowTr += netCashflowAnnual;
+
+        // Cột 3: Dư nợ ngân hàng còn lại (Trừ dần tiền gốc đã trả - Amortization balance)
+        let remainingLoanTy = 0;
+        if (initialLoanTy > 0 && monthlyRate > 0 && totalMonths > 0) {
+          const monthsElapsed = y * 12;
+          if (monthsElapsed < totalMonths) {
+            const num = Math.pow(1 + monthlyRate, totalMonths) - Math.pow(1 + monthlyRate, monthsElapsed);
+            const den = Math.pow(1 + monthlyRate, totalMonths) - 1;
+            remainingLoanTy = initialLoanTy * (num / den);
+          }
+        }
+
+        // Cột 4: Vốn chủ sở hữu tại BĐS (Giá trị BĐS - Dư nợ gốc)
+        const homeEquityTy = curValue - remainingLoanTy;
+
+        // Cột 6: TỔNG TÀI SẢN RÒNG TÍCH LŨY (Vốn chủ sở hữu + Dòng tiền thuê tích lũy)
+        const cumulativeCashflowTy = cumulativeCashflowTr / 1000;
+        const totalNetWorthTy = homeEquityTy + cumulativeCashflowTy;
+
+        // Tỷ suất ROI lũy kế
+        const totalGrowthPct = initialEquity > 0 ? (((totalNetWorthTy - initialEquity) / initialEquity) * 100).toFixed(1) : '0';
+
+        yearsData.push({
+          year: `Năm ${y}`,
+          propValue: curValue.toFixed(2),
+          loanBalance: remainingLoanTy.toFixed(2),
+          homeEquity: homeEquityTy.toFixed(2),
+          cumulCashTr: cumulativeCashflowTr.toFixed(1),
+          totalNetWorth: totalNetWorthTy.toFixed(2),
+          roi: totalGrowthPct
+        });
+
+        propertyValueTimeline.push(Number(curValue.toFixed(2)));
+        equityTimeline.push(Number(homeEquityTy.toFixed(2)));
+        netWorthTimeline.push(Number(totalNetWorthTy.toFixed(2)));
+      }
+
+      // Render Bảng Dự Phóng 5 Năm Đầy Đủ 6 Cột
+      const tbody = document.getElementById('projection-table-body');
+      tbody.innerHTML = `
+        <tr class="bg-slate-50 font-bold border-b border-slate-200">
+          <td class="py-3 px-4 font-black text-navy-900">Năm 0 (Gốc)</td>
+          <td class="py-3 px-4 text-right">${initialTotalCap.toFixed(2)} Tỷ</td>
+          <td class="py-3 px-4 text-right text-rose-600">${initialLoanTy.toFixed(2)} Tỷ</td>
+          <td class="py-3 px-4 text-right font-black text-navy-900">${initialEquity.toFixed(2)} Tỷ</td>
+          <td class="py-3 px-4 text-right">0 Tr</td>
+          <td class="py-3 px-4 text-right font-black text-navy-900 text-sm">${initialEquity.toFixed(2)} Tỷ</td>
+          <td class="py-3 px-4 text-center text-slate-400">Gốc ban đầu</td>
+        </tr>
+      ` + yearsData.map(d => `
+        <tr class="hover:bg-slate-50/80 transition border-b border-slate-100">
+          <td class="py-3.5 px-4 font-black text-navy-900 flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+            <span>${d.year}</span>
+          </td>
+          <td class="py-3.5 px-4 text-right font-semibold text-slate-800">${d.propValue} Tỷ</td>
+          <td class="py-3.5 px-4 text-right text-rose-600 font-semibold">${d.loanBalance} Tỷ</td>
+          <td class="py-3.5 px-4 text-right font-black text-navy-900">${d.homeEquity} Tỷ</td>
+          <td class="py-3.5 px-4 text-right font-bold ${Number(d.cumulCashTr)>=0?'text-emerald-700':'text-rose-600'}">
+            ${Number(d.cumulCashTr)>=0?'+':''}${d.cumulCashTr} Tr
+          </td>
+          <td class="py-3.5 px-4 text-right font-black text-emerald-700 text-sm bg-emerald-50/40">
+            ${d.totalNetWorth} Tỷ
+          </td>
+          <td class="py-3.5 px-4 text-center">
+            <span class="inline-block px-2.5 py-1 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
+              +${d.roi}%
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      // Top Cards Update
+      const y5 = yearsData[4];
+      document.getElementById('proj-net-worth-5y').textContent = y5.totalNetWorth + ' Tỷ';
+      const netGain = (Number(y5.totalNetWorth) - initialEquity).toFixed(2);
+      document.getElementById('proj-equity-growth-5y').textContent = `+${netGain} Tỷ (+${y5.roi}%) sau 5 năm`;
+      document.getElementById('proj-total-roi-5y').textContent = '+' + y5.roi + '%';
+      document.getElementById('proj-annualized-roi').textContent = `Tương đương: ~${(Number(y5.roi)/5).toFixed(1)}%/năm`;
+
+      // Render Projection Chart
+      renderProjectionChart(labels, propertyValueTimeline, equityTimeline, netWorthTimeline);
+    }
+
+    function renderProjectionChart(labels, propValues, equities, netWorths) {
+      const ctx = document.getElementById('chart-projection-5y').getContext('2d');
+      if (state.chartProjection) state.chartProjection.destroy();
+
+      state.chartProjection = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Tổng Tài Sản Ròng Lũy Kế (Vốn chủ sở hữu + Tiền thuê)',
+              data: netWorths,
+              borderColor: '#059669',
+              backgroundColor: 'rgba(5, 150, 105, 0.15)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 3.5,
+              pointRadius: 5,
+              pointBackgroundColor: '#059669'
+            },
+            {
+              label: 'Giá Trị BĐS Dự Phóng (Tăng trưởng tích lũy)',
+              data: propValues,
+              borderColor: '#d97706',
+              borderDash: [5, 5],
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 4,
+              pointBackgroundColor: '#d97706'
+            },
+            {
+              label: 'Vốn Chủ Sở Hữu Tại BĐS (Giá trị BĐS - Dư nợ)',
+              data: equities,
+              borderColor: '#2563eb',
+              tension: 0.35,
+              borderWidth: 2,
+              pointRadius: 4,
+              pointBackgroundColor: '#2563eb'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { family: 'Inter', size: 10, weight: 600 } } },
+            tooltip: {
+              callbacks: { label: (c) => ` ${c.dataset.label}: ${c.raw} Tỷ VNĐ` }
+            }
+          },
+          scales: {
+            y: { ticks: { callback: (v) => v + ' Tỷ' } }
+          }
+        }
+      });
+    }
+
+    // ================= 9. FORM MODAL & TÍNH TOÁN REAL-TIME =================
     function liveCalculate() {
       const dummy = {
         purchasePrice: Number(document.getElementById('form-purchase-price').value) || 0,
@@ -1683,6 +2206,7 @@
       } else {
         state.properties.unshift(propData);
         state.selectedReportId = propData.id;
+        state.selectedProjectionId = propData.id;
       }
 
       saveStorage();
@@ -1702,6 +2226,9 @@
         if (state.selectedReportId === id) {
           state.selectedReportId = state.properties.length ? state.properties[0].id : null;
         }
+        if (state.selectedProjectionId === id) {
+          state.selectedProjectionId = state.properties.length ? state.properties[0].id : null;
+        }
         saveStorage();
         renderAll();
       }
@@ -1711,6 +2238,7 @@
       if (confirm('Khôi phục lại danh sách BĐS mẫu thực tế tại Đà Nẵng?')) {
         state.properties = [...INITIAL_PROPERTIES];
         state.selectedReportId = state.properties[0].id;
+        state.selectedProjectionId = state.properties[0].id;
         state.selectedCompareIds = state.properties.slice(0, 2).map(p => p.id);
         saveStorage();
         renderAll();
@@ -1721,13 +2249,14 @@
       if (confirm('Cảnh báo: Toàn bộ danh mục đầu tư sẽ bị xóa trắng! Bạn có chắc không?')) {
         state.properties = [];
         state.selectedReportId = null;
+        state.selectedProjectionId = null;
         state.selectedCompareIds = [];
         saveStorage();
         renderAll();
       }
     }
 
-    // ================= 8. BÁO CÁO THẨM ĐỊNH & XUẤT PDF =================
+    // ================= 10. BÁO CÁO THẨM ĐỊNH & XUẤT PDF =================
     function viewReport(id) {
       state.selectedReportId = id;
       switchTab('report');
@@ -1804,11 +2333,11 @@
       initLucide();
     }
 
-    // ================= 9. NAVIGATION TABS =================
+    // ================= 11. NAVIGATION TABS =================
     function switchTab(tabId) {
       state.currentTab = tabId;
 
-      ['dashboard', 'properties', 'compare', 'report'].forEach(t => {
+      ['dashboard', 'properties', 'compare', 'simulator', 'projection', 'report'].forEach(t => {
         const section = document.getElementById(`tab-${t}`);
         if (section) section.classList.add('hidden');
         
@@ -1819,7 +2348,7 @@
 
         const mNav = document.getElementById(`bnav-${t}`);
         if (mNav) {
-          mNav.className = "flex flex-col items-center space-y-1 hover:text-white text-slate-400";
+          mNav.className = "flex flex-col items-center space-y-1 hover:text-white text-slate-400 min-w-[55px]";
         }
       });
 
@@ -1833,7 +2362,7 @@
 
       const activeMNav = document.getElementById(`bnav-${tabId}`);
       if (activeMNav) {
-        activeMNav.className = "flex flex-col items-center space-y-1 text-emerald-500 font-bold";
+        activeMNav.className = "flex flex-col items-center space-y-1 text-emerald-500 font-bold min-w-[55px]";
       }
 
       if (tabId === 'dashboard') {
@@ -1842,6 +2371,9 @@
       if (tabId === 'compare') {
         renderComparison();
       }
+      if (tabId === 'projection') {
+        run5YearProjection(state.selectedProjectionId);
+      }
       if (tabId === 'report' && state.selectedReportId) {
         loadPropertyReport(state.selectedReportId);
       }
@@ -1849,5 +2381,13 @@
       initLucide();
     }
   </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgKGV2ZW50KSA9PiB7CiAgZevGtsOjaW5zdGFsbCBwcm9ncmVzcygpOwogIHJlc29sdmUoKTsKfSk7')
+        .catch(err => console.log('SW registration failed: ', err));
+    });
+  }
+</script>
 </body>
 </html>
