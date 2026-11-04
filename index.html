@@ -48,7 +48,6 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <style>
-    /* Thanh cuộn tinh tế & tương thích Safari iOS */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
@@ -95,7 +94,7 @@
         <button onclick="switchTab('ai')" id="nav-ai" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition font-bold text-xs uppercase tracking-wide">
           <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
           <span class="flex-1 text-left">Trợ Lý AI Advisor</span>
-          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-black tracking-widest">2.0 FLASH</span>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-black tracking-widest">3.8 FLASH</span>
         </button>
       </nav>
     </div>
@@ -103,7 +102,7 @@
     <!-- Cài đặt & Tiện ích Database -->
     <div class="p-4 border-t border-navy-800 space-y-2">
       <div class="flex items-center justify-between px-2 text-[11px] font-bold uppercase text-slate-400">
-        <span>Google Gemini API</span>
+        <span>Gemini 3.8 Flash API</span>
         <span id="key-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
       </div>
       <button onclick="openApiKeyModal()" class="w-full text-xs flex items-center space-x-2 text-slate-300 hover:text-white px-3 py-2 rounded-lg hover:bg-navy-800 transition">
@@ -170,7 +169,6 @@
             <span>Thêm BĐS Mới</span>
           </button>
         </div>
-        <!-- Decorative Glow -->
         <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-gold-600/10 rounded-full blur-3xl pointer-events-none"></div>
       </div>
 
@@ -290,7 +288,7 @@
         </div>
       </div>
 
-      <!-- Danh Sách BĐS (Card Grid trên Mobile iPhone, Bảng trên Desktop) -->
+      <!-- Danh Sách BĐS -->
       <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         
         <!-- Bảng Desktop -->
@@ -335,7 +333,7 @@
             <i data-lucide="sparkles" class="w-6 h-6 text-gold-500"></i>
             <span>Trợ Lý AI Tư Vấn & Định Giá BĐS</span>
           </h2>
-          <p class="text-xs text-slate-500">Tích hợp mô hình Gemini 2.0 Flash phân tích dòng tiền, định giá m2 và tư vấn đàm phán.</p>
+          <p class="text-xs text-slate-500">Tích hợp mô hình Gemini 3.8 Flash phân tích dòng tiền, định giá m2 và tư vấn đàm phán.</p>
         </div>
         <button onclick="openApiKeyModal()" class="bg-white border border-slate-300 hover:border-gold-500 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 shadow-sm self-start sm:self-auto transition">
           <i data-lucide="key" class="w-4 h-4 text-gold-600"></i>
@@ -351,7 +349,7 @@
           <div class="flex items-center space-x-3">
             <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
             <div>
-              <span class="text-xs font-black uppercase tracking-wider text-gold-400">Gemini 2.0 Flash Engine</span>
+              <span class="text-xs font-black uppercase tracking-wider text-gold-400">Gemini 3.8 Flash Engine</span>
               <p class="text-[10px] text-slate-400">Chuyên gia định giá & chiến lược đầu tư BĐS Đà Nẵng</p>
             </div>
           </div>
@@ -367,7 +365,7 @@
             </div>
             <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm border border-slate-200 max-w-2xl text-slate-800 leading-relaxed">
               <p class="font-extrabold text-navy-900 mb-1">Kính chào Nhà đầu tư của HẬU DÒNG TIỀN REAL ESTATE!</p>
-              <p>Tôi là trợ lý AI được tối ưu riêng cho thị trường Đà Nẵng. Tôi có thể hỗ trợ bạn:</p>
+              <p>Tôi là trợ lý AI được cấp nguồn bởi <b>Gemini 3.8 Flash</b>, tối ưu hóa riêng cho thị trường Đà Nẵng:</p>
               <ul class="list-disc pl-5 my-2 space-y-1 text-slate-600">
                 <li><b>Định giá đơn giá/m²</b> đất & chi phí xây dựng theo từng cung đường (Hải Châu, Sơn Trà, Ngũ Hành Sơn...).</li>
                 <li><b>Kiểm tra tỷ suất Cap Rate thực tế</b> và đánh giá kịch bản lấp đầy mùa cao/thấp điểm.</li>
@@ -530,7 +528,7 @@
             </div>
           </div>
 
-          <!-- Nhãn đánh giá tự động theo yêu cầu -->
+          <!-- Nhãn đánh giá tự động -->
           <div class="pt-2 border-t border-navy-800/80 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1.5">
             <span class="text-slate-300 font-medium">Nhãn đánh giá tự động:</span>
             <span id="preview-rating-badge" class="px-3 py-1 rounded-full font-black text-[11px] bg-navy-800 text-slate-400 border border-navy-700 text-center">
@@ -562,7 +560,7 @@
           </div>
           <div>
             <h3 class="font-black text-sm">Cấu Hình Gemini API</h3>
-            <p class="text-[10px] text-gold-400">Sử dụng model Gemini 2.0 Flash</p>
+            <p class="text-[10px] text-gold-400">Model: gemini-3.8-flash</p>
           </div>
         </div>
         <button onclick="closeApiKeyModal()" class="p-1.5 text-slate-400 hover:text-white">
@@ -572,7 +570,7 @@
 
       <div class="p-5 space-y-4 text-xs md:text-sm">
         <p class="text-slate-600 leading-relaxed text-xs">
-          Nhập <b>Google Gemini API Key</b> của bạn để kích hoạt khả năng phân tích dòng tiền chuyên sâu. Khóa được lưu an toàn trong trình duyệt (LocalStorage) của bạn.
+          Nhập <b>Google Gemini API Key</b> của bạn để kích hoạt khả năng phân tích dòng tiền chuyên sâu với <b>Gemini 3.8 Flash</b>. Khóa được lưu an toàn trên thiết bị (LocalStorage).
         </p>
         <div>
           <label class="block font-bold text-navy-900 mb-1">Gemini API Key:</label>
@@ -656,23 +654,18 @@
 
     // ================= 1. BỘ MÁY TÍNH TOÁN TÀI CHÍNH (FINANCE ENGINE) =================
     const FinanceEngine = {
-      // Tổng vốn = Giá mua + Chi phí cải tạo (Tỷ VNĐ)
       calcTotalCapital: (p) => {
         const purchase = Number(p.purchasePrice) || 0;
         const reno = Number(p.renovationCost) || 0;
         return Number((purchase + reno).toFixed(3));
       },
 
-      // Dòng tiền ròng/năm = (Doanh thu - Chi phí vận hành) * 12 (Tr VNĐ)
       calcAnnualNetCashflow: (p) => {
         const rent = Number(p.monthlyRent) || 0;
         const opex = Number(p.monthlyOpex) || 0;
         return Number(((rent - opex) * 12).toFixed(1));
       },
 
-      // Cap Rate (%) = (Dòng tiền ròng/năm / Tổng vốn) * 100
-      // Quy đổi: Dòng tiền ròng tính bằng Triệu, Tổng vốn tính bằng Tỷ (1 Tỷ = 1000 Triệu)
-      // Cap Rate (%) = (annualNet / (totalCapital * 1000)) * 100 = (annualNet / totalCapital) / 10
       calcCapRate: (p) => {
         const totalCapital = FinanceEngine.calcTotalCapital(p);
         if (totalCapital <= 0) return 0;
@@ -681,10 +674,6 @@
         return Number(rate.toFixed(2));
       },
 
-      // Phân loại nhãn theo đúng tiêu chí đề bài:
-      // Cap Rate >= 5%: "Dòng tiền Tốt - Ưu tiên Đầu tư"
-      // Cap Rate 3.5% - 4.9%: "Dòng tiền Trung bình"
-      // Cap Rate < 3.5%: "Lợi nhuận Thấp - Thiên về Tăng trưởng Giá"
       getRating: (capRate) => {
         if (capRate >= 5.0) {
           return {
@@ -787,7 +776,7 @@
       }
     }
 
-    // ================= 4. RENDER DANH MỤC TÀI SẢN (TABLE & MOBILE CARDS) =================
+    // ================= 4. RENDER DANH MỤC TÀI SẢN =================
     function renderProperties() {
       const search = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
       const district = document.getElementById('district-filter')?.value || 'all';
@@ -817,7 +806,7 @@
         const capRate = FinanceEngine.calcCapRate(p);
         const rating = FinanceEngine.getRating(capRate);
 
-        // 1. Dòng trên Desktop Table
+        // 1. Desktop Row
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm";
         tr.innerHTML = `
@@ -868,7 +857,7 @@
         `;
         tbody.appendChild(tr);
 
-        // 2. Card trên Mobile iPhone
+        // 2. Mobile iPhone Card
         const card = document.createElement('div');
         card.className = "p-4 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-2.5";
         card.innerHTML = `
@@ -918,7 +907,6 @@
 
     // ================= 5. BIỂU ĐỒ CHART.JS =================
     function renderCharts() {
-      // 1. Biểu đồ So Sánh Vốn & Dòng Tiền
       const labels = appState.properties.map(p => p.name.length > 15 ? p.name.substring(0, 13) + '...' : p.name);
       const capitals = appState.properties.map(p => FinanceEngine.calcTotalCapital(p));
       const annualNets = appState.properties.map(p => FinanceEngine.calcAnnualNetCashflow(p));
@@ -969,7 +957,6 @@
         }
       });
 
-      // 2. Biểu đồ Donut Phân Bổ Theo Quận
       const districtMap = {};
       appState.properties.forEach(p => {
         districtMap[p.district] = (districtMap[p.district] || 0) + FinanceEngine.calcTotalCapital(p);
@@ -1008,7 +995,7 @@
       });
     }
 
-    // ================= 6. XỬ LÝ FORM MODAL & TÍNH TOÁN REAL-TIME =================
+    // ================= 6. XỬ LÝ FORM MODAL & TÍNH TOÁN =================
     function liveCalculate() {
       const purchase = Number(document.getElementById('form-purchase-price').value) || 0;
       const reno = Number(document.getElementById('form-renovation-cost').value) || 0;
@@ -1122,7 +1109,7 @@
       }
     }
 
-    // ================= 7. TRỢ LÝ AI ADVISOR (GEMINI 2.0 FLASH) =================
+    // ================= 7. TRỢ LÝ AI ADVISOR (GEMINI 3.8 FLASH) =================
     function openApiKeyModal() {
       document.getElementById('input-api-key').value = appState.apiKey;
       const modal = document.getElementById('api-modal');
@@ -1186,16 +1173,16 @@
 
       const loadingId = appendLoadingIndicator();
 
-      // Kiểm tra API Key
+      // Kiểm tra API Key đã cấu hình hay chưa
       if (!appState.apiKey) {
         setTimeout(() => {
           removeLoadingIndicator(loadingId);
-          appendChatMessage('ai', `⚠️ **Chưa phát hiện Gemini API Key!**\n\nVui lòng bấm vào nút **"Cài đặt API Key"** ở trên để nhập khóa API từ Google AI Studio. Ứng dụng sử dụng model trực tiếp **Gemini 2.0 Flash** để thẩm định và định giá BĐS.`);
-        }, 500);
+          appendChatMessage('ai', `⚠️ **Chưa cấu hình Gemini API Key!**\n\nVui lòng nhấn nút **"Cài đặt API Key"** để nhập khóa API từ Google AI Studio (ai.google.dev). Ứng dụng kết nối trực tiếp đến mô hình **Gemini 3.8 Flash** để phân tích dòng tiền và thẩm định giá.`);
+        }, 400);
         return;
       }
 
-      // Context danh mục hiện tại của người dùng
+      // Context danh mục hiện tại của nhà đầu tư
       const portfolioContext = appState.properties.map(p => 
         `• ${p.name} (${p.district}): Tổng vốn ${FinanceEngine.calcTotalCapital(p)} Tỷ, Doanh thu ${p.monthlyRent}tr, Cap Rate ${FinanceEngine.calcCapRate(p)}%`
       ).join('\n');
@@ -1213,8 +1200,8 @@ ${portfolioContext || 'Chưa có BĐS trong danh mục.'}
 Trả lời bằng Tiếng Việt, chuyên nghiệp, súc tích, định dạng Markdown rõ ràng, làm nổi bật các con số then chốt.`;
 
       try {
-        // Gọi trực tiếp Gemini 2.0 Flash Endpoint
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${appState.apiKey}`, {
+        // Gọi trực tiếp Gemini 3.8 Flash Endpoint
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${appState.apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1234,17 +1221,37 @@ Trả lời bằng Tiếng Việt, chuyên nghiệp, súc tích, định dạng 
         const data = await response.json();
         removeLoadingIndicator(loadingId);
 
+        // Xử lý thông báo lỗi chi tiết, rõ ràng nếu API Key sai hoặc không khả dụng
+        if (!response.ok || data.error) {
+          const status = response.status || data.error?.code || 'Error';
+          const errMsg = data.error?.message || response.statusText || 'Không rõ nguyên nhân';
+
+          let userNotice = '';
+          if (status === 400 || errMsg.toLowerCase().includes('api_key_invalid') || errMsg.toLowerCase().includes('key not valid')) {
+            userNotice = `🔑 **API Key không hợp lệ hoặc sai định dạng!**\n\nMã khóa bạn vừa nhập không chính xác hoặc đã bị vô hiệu hóa trên Google AI Studio. Vui lòng bấm vào nút **"Cài đặt API Key"** ở góc phải để kiểm tra và cập nhật lại.`;
+          } else if (status === 403 || status === 401) {
+            userNotice = `🚫 **Không có quyền truy cập dịch vụ (Lỗi ${status})!**\n\nAPI Key của bạn chưa được kích hoạt quyền truy cập Generative Language API hoặc bị giới hạn IP/Quốc gia. Hãy kiểm tra cài đặt Restrictions trong Google Cloud Console.`;
+          } else if (status === 404) {
+            userNotice = `🔍 **Model không khả dụng hoặc chưa kích hoạt (Lỗi 404)!**\n\nModel \`gemini-3.8-flash\` hiện chưa mở cho tài khoản hoặc vùng của bạn. Vui lòng kiểm tra trạng thái kích hoạt model trên tài khoản Google AI Studio.`;
+          } else if (status === 429) {
+            userNotice = `⏳ **Vượt quá hạn mức yêu cầu (Lỗi 429 - Rate Limit / Quota Exceeded)!**\n\nAPI Key đã gửi quá nhiều yêu cầu trong thời gian ngắn hoặc đã sử dụng hết hạn mức miễn phí trong ngày. Vui lòng chờ 1-2 phút rồi thử lại.`;
+          } else {
+            userNotice = `❌ **Lỗi kết nối Gemini API (${status}):**\n\n${errMsg}\n\n*Gợi ý:* Hãy kiểm tra lại API Key, kết nối mạng và thử lại.`;
+          }
+
+          appendChatMessage('ai', userNotice);
+          return;
+        }
+
         if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
           const aiResponse = data.candidates[0].content.parts[0].text;
           appendChatMessage('ai', aiResponse);
-        } else if (data.error) {
-          appendChatMessage('ai', `❌ **Lỗi API Gemini:** ${data.error.message || 'Khóa API không hợp lệ hoặc vượt hạn mức ngạch.'}`);
         } else {
-          appendChatMessage('ai', 'Không nhận được dữ liệu phản hồi từ AI. Vui lòng thử lại.');
+          appendChatMessage('ai', '⚠️ Phản hồi từ mô hình không có nội dung văn bản. Vui lòng kiểm tra lại câu hỏi.');
         }
       } catch (err) {
         removeLoadingIndicator(loadingId);
-        appendChatMessage('ai', `❌ **Lỗi kết nối:** ${err.message}. Hãy kiểm tra kết nối mạng hoặc thử lại với API key hợp lệ.`);
+        appendChatMessage('ai', `❌ **Lỗi kết nối mạng hoặc trình duyệt:**\n\n${err.message}\n\nVui lòng kiểm tra lại đường truyền internet và đảm bảo API Key được nhập chính xác.`);
       }
     }
 
@@ -1292,7 +1299,7 @@ Trả lời bằng Tiếng Việt, chuyên nghiệp, súc tích, định dạng 
         </div>
         <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm border border-slate-200 text-xs text-slate-500 flex items-center space-x-2.5">
           <div class="w-2 h-2 rounded-full bg-gold-500 animate-ping"></div>
-          <span>Gemini 2.0 Flash đang truy xuất dữ liệu thị trường Đà Nẵng và thẩm định số liệu...</span>
+          <span>Gemini 3.8 Flash đang truy xuất dữ liệu thị trường Đà Nẵng và thẩm định số liệu...</span>
         </div>
       `;
       container.appendChild(div);
@@ -1312,20 +1319,17 @@ Trả lời bằng Tiếng Việt, chuyên nghiệp, súc tích, định dạng 
       ['dashboard', 'properties', 'ai'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.add('hidden');
         
-        // Reset PC nav
         const pcNav = document.getElementById(`nav-${t}`);
         if (pcNav) {
           pcNav.className = "w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition font-bold text-xs uppercase tracking-wide";
         }
 
-        // Reset Mobile bottom nav
         const mNav = document.getElementById(`bnav-${t}`);
         if (mNav) {
           mNav.className = "flex flex-col items-center space-y-1 hover:text-white text-slate-400";
         }
       });
 
-      // Kích hoạt Tab được chọn
       document.getElementById(`tab-${tabId}`).classList.remove('hidden');
 
       const activePcNav = document.getElementById(`nav-${tabId}`);
@@ -1344,48 +1348,6 @@ Trả lời bằng Tiếng Việt, chuyên nghiệp, súc tích, định dạng 
 
       initLucide();
     }
-  </script>// Hàm gửi prompt phân tích BĐS tới Gemini API
-async function askGeminiAI(userPrompt, apiKey) {
-    if (!apiKey) {
-        alert("Vui lòng nhập Gemini API Key của bạn!");
-        return;
-    }
-
-    // Endpoint của mô hình Gemini 2.0 Flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    // Tạo ngữ cảnh (Context) chuyên gia BĐS dòng tiền Đà Nẵng
-    const systemContext = `Bạn là Trợ lý AI cao cấp của HẬU DÒNG TIỀN REAL ESTATE, chuyên phân tích bất động sản dòng tiền (tòa căn hộ, homestay, nhà phố cho thuê) tại thị trường Đà Nẵng. Hãy phân tích ngắn gọn, sắc bén về tỷ suất dòng tiền (Cap Rate), định giá và chiến lược đàm phán.`;
-
-    const requestBody = {
-        contents: [
-            {
-                role: "user",
-                parts: [{ text: `${systemContext}\n\nYêu cầu từ nhà đầu tư: ${userPrompt}` }]
-            }
-        ]
-    };
-
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody)
-        });
-
-        const data = await response.json();
-        
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
-            const aiReply = data.candidates[0].content.parts[0].text;
-            console.log("AI Trả lời:", aiReply);
-            return aiReply; // Trả về nội dung phản hồi của AI
-        } else {
-            throw new Error("Không nhận được phản hồi hợp lệ từ Gemini API.");
-        }
-    } catch (error) {
-        console.error("Lỗi khi kết nối Gemini API:", error);
-        alert("Có lỗi xảy ra khi kết nối AI. Kiểm tra lại API Key hoặc Console log!");
-    }
-}
+  </script>
 </body>
 </html>
