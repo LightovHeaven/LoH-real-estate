@@ -92,6 +92,16 @@
         </div>
         <div>
           <h1 class="font-black text-sm tracking-wider text-white uppercase leading-tight">HẬU DÒNG TIỀN</h1>
+          <!-- Bộ công cụ Backup / Restore dữ liệu -->
+<div class="flex gap-3 mb-6">
+    <button onclick="exportData()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow transition flex items-center gap-2">
+        <span>📥</span> Xuất file sao lưu (Backup)
+    </button>
+    <label class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition cursor-pointer flex items-center gap-2">
+        <span>📤</span> Nhập dữ liệu (Import)
+        <input type="file" id="importFileInput" accept=".json,.csv" onchange="importData(event)" class="hidden">
+    </label>
+</div>
           <p class="text-[10px] text-gold-500 font-extrabold tracking-widest uppercase">REAL ESTATE • ĐÀ NẴNG</p>
         </div>
       </div>
@@ -2389,5 +2399,53 @@
     });
   }
 </script>
+  // 1. TÍNH NĂNG XUẤT DỮ LIỆU (EXPORT)
+function exportData() {
+    const properties = localStorage.getItem('hau_real_estate_list') || '[]';
+    if (properties === '[]') {
+        alert('Chưa có dữ liệu bất động sản nào để xuất!');
+        return;
+    }
+    
+    const blob = new Blob([properties], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    // Đặt tên file theo ngày tháng thực tế
+    const today = new Date().toISOString().split('T')[0];
+    a.href = url;
+    a.download = `BDS_HauDongTien_Backup_${today}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// 2. TÍNH NĂNG NHẬP DỮ LIỆU (IMPORT)
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            if (!Array.isArray(importedData)) {
+                alert('File dữ liệu không đúng định dạng!');
+                return;
+            }
+
+            if (confirm(`Bạn có muốn nhập ${importedData.length} bất động sản từ file này vào ứng dụng không?`)) {
+                // Lưu vào LocalStorage và làm mới danh sách hiển thị
+                localStorage.setItem('hau_real_estate_list', JSON.stringify(importedData));
+                alert('Đã nhập dữ liệu thành công!');
+                location.reload(); // Tải lại trang để cập nhật giao diện
+            }
+        } catch (err) {
+            alert('Lỗi đọc file! Vui lòng kiểm tra lại file .json của bạn.');
+        }
+    };
+    reader.readAsText(file);
+}
 </body>
 </html>
