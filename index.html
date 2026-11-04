@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>HẬU DÒNG TIỀN REAL ESTATE - Bộ Công Cụ Phân Tích Tài Chính BĐS Thực Chiến</title>
+  <title>HẬU DÒNG TIỀN REAL ESTATE - Quản Trị & So Sánh Tài Chính BĐS Đà Nẵng</title>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +56,12 @@
     .emerald-gradient { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
     .navy-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
 
-    /* CSS Định Dạng Dành Riêng Cho Bản In & Xuất File PDF A4 */
+    /* Custom Checkbox Styling */
+    .compare-checkbox:checked {
+      background-color: #059669;
+      border-color: #059669;
+    }
+
     @media print {
       body * { visibility: hidden; }
       #print-report-container, #print-report-container * { visibility: visible; }
@@ -71,7 +76,6 @@
         color: black !important;
       }
       .no-print { display: none !important; }
-      .print-page-break { page-break-after: always; }
     }
   </style>
 </head>
@@ -87,25 +91,33 @@
         </div>
         <div>
           <h1 class="font-black text-sm tracking-wider text-white uppercase leading-tight">HẬU DÒNG TIỀN</h1>
-          <p class="text-[10px] text-gold-500 font-extrabold tracking-widest uppercase">FINANCIAL ENGINE • ĐÀ NẴNG</p>
+          <p class="text-[10px] text-gold-500 font-extrabold tracking-widest uppercase">REAL ESTATE • ĐÀ NẴNG</p>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <nav class="p-4 space-y-2">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-bold transition text-xs uppercase tracking-wide bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
+      <nav class="p-4 space-y-1.5 text-xs font-bold uppercase tracking-wider">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
           <span>Dashboard Tổng Quan</span>
         </button>
 
-        <button onclick="switchTab('properties')" id="nav-properties" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition font-bold text-xs uppercase tracking-wide">
+        <button onclick="switchTab('properties')" id="nav-properties" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
           <i data-lucide="calculator" class="w-4 h-4 text-gold-500"></i>
           <span class="flex-1 text-left">Khảo Sát & Dòng Tiền</span>
           <span id="badge-count-pc" class="text-[11px] bg-navy-800 text-gold-400 px-2 py-0.5 rounded-full font-black border border-navy-700">0</span>
         </button>
 
-        <button onclick="switchTab('report')" id="nav-report" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition font-bold text-xs uppercase tracking-wide">
-          <i data-lucide="file-text" class="w-4 h-4 text-emerald-400"></i>
+        <!-- TÍNH NĂNG TRỌNG TÂM: SO SÁNH 2 TÀI SẢN -->
+        <button onclick="switchTab('compare')" id="nav-compare" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
+          <i data-lucide="columns-2" class="w-4 h-4 text-emerald-400"></i>
+          <span class="flex-1 text-left">So Sánh 2 Tài Sản</span>
+          <span id="badge-compare-count" class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded font-black">0/2</span>
+        </button>
+
+        <!-- BÁO CÁO PDF -->
+        <button onclick="switchTab('report')" id="nav-report" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-navy-850 hover:text-white transition">
+          <i data-lucide="printer" class="w-4 h-4 text-slate-400"></i>
           <span class="flex-1 text-left">Báo Cáo Thẩm Định</span>
           <span class="text-[9px] bg-gold-500/20 text-gold-300 border border-gold-500/30 px-1.5 py-0.5 rounded font-black">PDF</span>
         </button>
@@ -119,7 +131,7 @@
           <span>Hệ Thống Đòn Bẩy</span>
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
         </div>
-        <p class="text-[10px] leading-relaxed">Tự động khấu trừ nợ gốc & lãi (P&I), tính Cash-on-Cash và kiểm định rủi ro DSCR.</p>
+        <p class="text-[10px] leading-relaxed">Tự động tính nợ gốc & lãi P&I, kiểm định DSCR và tỷ suất sinh lời trên tiền mặt (CoCR).</p>
       </div>
 
       <div class="flex items-center justify-between text-[11px] pt-1">
@@ -129,7 +141,7 @@
         </button>
         <button onclick="clearAllData()" class="text-rose-400/80 hover:text-rose-400 transition flex items-center space-x-1">
           <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-          <span>Xóa tất cả</span>
+          <span>Xóa dữ liệu</span>
         </button>
       </div>
     </div>
@@ -143,13 +155,13 @@
       </div>
       <div>
         <h1 class="font-extrabold text-xs uppercase text-white leading-tight">HẬU DÒNG TIỀN</h1>
-        <p class="text-[9px] text-gold-500 font-bold uppercase tracking-wider">FINANCE ENGINE BĐS</p>
+        <p class="text-[9px] text-gold-500 font-bold uppercase tracking-wider">REAL ESTATE ĐÀ NẴNG</p>
       </div>
     </div>
     <div class="flex items-center space-x-2">
       <button onclick="openModal()" class="emerald-gradient text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow flex items-center space-x-1">
         <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-        <span>Khảo sát BĐS</span>
+        <span>Thêm BĐS</span>
       </button>
     </div>
   </header>
@@ -159,23 +171,26 @@
 
     <!-- ================= TAB 1: DASHBOARD TỔNG QUAN ================= -->
     <section id="tab-dashboard" class="space-y-6">
-      
       <!-- Top Banner Dashboard -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-navy-900 p-6 rounded-3xl text-white border border-navy-800 shadow-xl relative overflow-hidden">
         <div class="relative z-10">
           <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-gold-600/20 text-gold-400 border border-gold-600/30 text-xs font-bold uppercase mb-2">
-            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
-            <span>Bộ Công Cụ Phân Tích Thực Chiến 2026</span>
+            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+            <span>Bộ Công Cụ Phân Tích & Đối Chiếu BĐS Thực Chiến</span>
           </div>
-          <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">QUẢN TRỊ TÀI CHÍNH & ĐÒN BẨY BĐS</h2>
+          <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">HỆ THỐNG QUẢN TRỊ DÒNG TIỀN BĐS</h2>
           <p class="text-xs md:text-sm text-slate-300 mt-1 max-w-2xl">
-            Tối ưu tỷ suất hoàn vốn trên tiền mặt (Cash-on-Cash Return), kiểm soát chỉ số an toàn phủ nợ DSCR và biên dự phòng trống phòng.
+            Tích hợp đòn bẩy ngân hàng, tính toán tự động Vốn tự có, Cash-on-Cash Return, Cap Rate, và hệ số phủ nợ DSCR chống rủi ro dòng tiền âm.
           </p>
         </div>
-        <div class="relative z-10 flex items-center space-x-3">
-          <button onclick="openModal()" class="emerald-gradient hover:opacity-95 text-white px-5 py-3 rounded-2xl font-extrabold text-sm shadow-lg shadow-emerald-900/50 flex items-center space-x-2 transition">
-            <i data-lucide="plus-circle" class="w-5 h-5"></i>
-            <span>Thêm BĐS Khảo Sát</span>
+        <div class="relative z-10 flex flex-wrap items-center gap-2.5">
+          <button onclick="openModal()" class="emerald-gradient hover:opacity-95 text-white px-4 py-2.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2 transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Thêm Khảo Sát</span>
+          </button>
+          <button onclick="switchTab('compare')" class="gold-gradient hover:opacity-95 text-navy-950 px-4 py-2.5 rounded-2xl font-black text-xs uppercase tracking-wider shadow-lg flex items-center space-x-2 transition">
+            <i data-lucide="columns-2" class="w-4 h-4"></i>
+            <span>So Sánh 2 BĐS</span>
           </button>
         </div>
         <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-gold-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -183,38 +198,37 @@
 
       <!-- 6 KPI CARDS CHUYÊN SÂU TÀI CHÍNH THỰC CHIẾN -->
       <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5">
-        
-        <!-- KPI 1: Tổng Vốn Đầu Tư -->
+        <!-- KPI 1 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
-            <span class="text-[11px] uppercase font-bold tracking-wider">Tổng Vốn Đầu Tư</span>
+            <span class="text-[11px] uppercase font-bold tracking-wider">Tổng Vốn Danh Mục</span>
             <div class="p-2 rounded-xl bg-slate-100 text-navy-900"><i data-lucide="layers" class="w-4 h-4"></i></div>
           </div>
           <div id="kpi-total-capital" class="text-lg md:text-2xl font-black text-navy-900">0.00 Tỷ</div>
           <div class="text-[10px] text-slate-400 mt-1">Giá mua + Chi phí cải tạo</div>
         </div>
 
-        <!-- KPI 2: Vốn Tự Có Bỏ Ra (Equity) -->
+        <!-- KPI 2 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Vốn Tự Có Bỏ Ra</span>
             <div class="p-2 rounded-xl bg-amber-50 text-gold-600"><i data-lucide="coins" class="w-4 h-4"></i></div>
           </div>
           <div id="kpi-total-equity" class="text-lg md:text-2xl font-black text-gold-600">0.00 Tỷ</div>
-          <div id="kpi-loan-ratio" class="text-[10px] text-slate-400 mt-1">Vay nợ ngân hàng: 0.00 Tỷ (0%)</div>
+          <div id="kpi-loan-ratio" class="text-[10px] text-slate-400 mt-1">Vốn vay: 0.00 Tỷ (0%)</div>
         </div>
 
-        <!-- KPI 3: Tiền Nợ Ngân Hàng Trả Hàng Tháng (P&I) -->
+        <!-- KPI 3 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Nợ Ngân Hàng / Tháng</span>
             <div class="p-2 rounded-xl bg-rose-50 text-rose-600"><i data-lucide="receipt" class="w-4 h-4"></i></div>
           </div>
           <div id="kpi-monthly-debt" class="text-lg md:text-2xl font-black text-rose-600">0 Tr VNĐ</div>
-          <div class="text-[10px] text-slate-400 mt-1">Tổng tiền gốc + lãi trả góp đều</div>
+          <div class="text-[10px] text-slate-400 mt-1">Gốc + lãi trả góp đều (P&I)</div>
         </div>
 
-        <!-- KPI 4: Dòng Tiền Ròng Thực Nhận (Sau khi trừ nợ) -->
+        <!-- KPI 4 -->
         <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-500 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider">Dòng Tiền Ròng Thực Nhận</span>
@@ -224,17 +238,17 @@
           <div id="kpi-net-annual" class="text-[10px] text-slate-400 mt-1">Năm: 0 Tr VNĐ (Sau trả nợ)</div>
         </div>
 
-        <!-- KPI 5: Cash-on-Cash Return Bình Quân -->
+        <!-- KPI 5 -->
         <div class="bg-navy-900 text-white p-4 md:p-5 rounded-2xl border border-navy-800 shadow-md relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-400 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider text-gold-400">Cash-on-Cash Return</span>
             <div class="p-2 rounded-xl bg-white/10 text-emerald-400"><i data-lucide="trending-up" class="w-4 h-4"></i></div>
           </div>
           <div id="kpi-avg-coc" class="text-lg md:text-2xl font-black text-white">0.00%</div>
-          <div class="text-[10px] text-slate-300 mt-1">(Dòng tiền ròng năm / Vốn tự có) × 100</div>
+          <div class="text-[10px] text-slate-300 mt-1">Hiệu suất trên tiền mặt tự có (CoCR)</div>
         </div>
 
-        <!-- KPI 6: Hệ Số Phủ Nợ DSCR Toàn Danh Mục -->
+        <!-- KPI 6 -->
         <div class="bg-navy-900 text-white p-4 md:p-5 rounded-2xl border border-navy-800 shadow-md relative overflow-hidden">
           <div class="flex items-center justify-between text-slate-400 mb-2">
             <span class="text-[11px] uppercase font-bold tracking-wider text-emerald-400">Hệ Số Phủ Nợ DSCR</span>
@@ -253,7 +267,7 @@
               <h3 class="font-extrabold text-navy-900 text-sm md:text-base">Dòng Tiền Ròng Thực Nhận Sau Nợ Ngân Hàng</h3>
               <p class="text-xs text-slate-400">So sánh NOI (Doanh thu trừ vận hành) và Tiền trả nợ ngân hàng hàng tháng</p>
             </div>
-            <span class="text-[11px] bg-slate-100 font-bold text-slate-600 px-3 py-1 rounded-full">Đơn vị: Triệu VNĐ/tháng</span>
+            <span class="text-[11px] bg-slate-100 font-bold text-slate-600 px-3 py-1 rounded-full">Triệu VNĐ/tháng</span>
           </div>
           <div class="h-64 sm:h-72 w-full relative">
             <canvas id="chart-cashflow-debt"></canvas>
@@ -277,12 +291,14 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 class="text-xl md:text-2xl font-black text-navy-900">Danh Mục & Bảng Tính Dòng Tiền Thực Chiến</h2>
-          <p class="text-xs text-slate-500">Tích hợp đòn bẩy ngân hàng, trừ dự phòng trống phòng và phát hiện rủi ro dòng tiền âm.</p>
+          <p class="text-xs text-slate-500">Tích chọn 2 ô bất kỳ để so sánh đối chiếu trực tiếp các chỉ số Vốn, CoCR, Cap Rate, DSCR.</p>
         </div>
-        <button onclick="openModal()" class="emerald-gradient hover:opacity-95 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-1.5 self-start sm:self-auto">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Thêm BĐS Khảo Sát</span>
-        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="openModal()" class="emerald-gradient hover:opacity-95 text-white px-5 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-md flex items-center justify-center space-x-1.5 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Thêm BĐS Khảo Sát</span>
+          </button>
+        </div>
       </div>
 
       <!-- Bộ lọc và Tìm kiếm -->
@@ -317,19 +333,18 @@
 
       <!-- Bảng Danh Sách Desktop & Mobile Card Grid -->
       <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        
-        <!-- Bảng Desktop -->
         <div class="hidden md:block overflow-x-auto">
           <table class="w-full text-left text-xs md:text-sm">
             <thead class="bg-navy-900 text-slate-300 uppercase text-[10px] font-black tracking-wider">
               <tr>
-                <th class="py-4 px-5">Tên BĐS & Vị Trí</th>
+                <th class="py-4 px-3 text-center w-12">Chọn</th>
+                <th class="py-4 px-4">Tên BĐS & Vị Trí</th>
                 <th class="py-4 px-4 text-right">Tổng Vốn / Vốn Tự Có</th>
                 <th class="py-4 px-4 text-right">Khoản Vay & Lãi Vay</th>
                 <th class="py-4 px-4 text-right">Trả Nợ Hàng Tháng</th>
                 <th class="py-4 px-4 text-right">Dòng Tiền Ròng/Tháng</th>
-                <th class="py-4 px-4 text-center">Cash-on-Cash</th>
-                <th class="py-4 px-5 text-center">Cảnh Báo DSCR & Đòn Bẩy</th>
+                <th class="py-4 px-4 text-center">CoCR (%)</th>
+                <th class="py-4 px-5 text-center">Cảnh Báo DSCR</th>
                 <th class="py-4 px-5 text-center">Thao Tác</th>
               </tr>
             </thead>
@@ -339,7 +354,6 @@
           </table>
         </div>
 
-        <!-- Mobile iPhone List -->
         <div id="property-mobile-cards" class="md:hidden divide-y divide-slate-100 p-2 space-y-2">
           <!-- Render JS Mobile -->
         </div>
@@ -347,12 +361,79 @@
         <div id="empty-state" class="hidden text-center py-16 px-4">
           <i data-lucide="building" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
           <p class="text-slate-500 font-bold text-sm">Chưa có dữ liệu khảo sát nào.</p>
-          <p class="text-xs text-slate-400 mt-1">Bấm "Thêm BĐS Khảo Sát" để cấu hình thông số vay và dòng tiền.</p>
+          <p class="text-xs text-slate-400 mt-1">Bấm "Thêm BĐS Khảo Sát" để bắt đầu cấu hình bài toán dòng tiền.</p>
         </div>
       </div>
     </section>
 
-    <!-- ================= TAB 3: BÁO CÁO THẨM ĐỊNH & XUẤT PDF ================= -->
+    <!-- ================= TAB 3: TÍNH NĂNG TRỌNG TÂM - SO SÁNH 2 TÀI SẢN ================= -->
+    <section id="tab-compare" class="hidden space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black text-navy-900 flex items-center space-x-2">
+            <i data-lucide="columns-2" class="w-6 h-6 text-emerald-600"></i>
+            <span>Bảng So Sánh Đối Chiếu 2 Bất Động Sản</span>
+          </h2>
+          <p class="text-xs text-slate-500">Đối chiếu trực quan Vốn đầu tư, Cash-on-Cash (CoCR), Cap Rate và hệ số an toàn phủ nợ DSCR.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="clearComparisonSelection()" class="text-xs text-slate-500 hover:text-rose-600 flex items-center space-x-1 font-bold px-3 py-1.5 rounded-xl border border-slate-200 bg-white shadow-sm transition">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>Chọn lại 2 BĐS</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Selector Chọn 2 BĐS nhanh hoặc nhận từ checkbox -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-navy-900 text-white p-4 rounded-2xl border border-navy-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase text-gold-400">BẤT ĐỘNG SẢN 1 (A)</span>
+            <span class="text-[10px] bg-gold-600/30 text-gold-300 px-2 py-0.5 rounded-full font-bold">Phương Án A</span>
+          </div>
+          <select id="compare-select-a" onchange="handleDropdownCompareChange()" class="w-full p-2.5 rounded-xl bg-navy-850 border border-navy-700 text-white text-xs md:text-sm font-bold focus:outline-none focus:border-gold-500">
+            <!-- options js -->
+          </select>
+        </div>
+
+        <div class="bg-navy-900 text-white p-4 rounded-2xl border border-navy-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase text-emerald-400">BẤT ĐỘNG SẢN 2 (B)</span>
+            <span class="text-[10px] bg-emerald-600/30 text-emerald-300 px-2 py-0.5 rounded-full font-bold">Phương Án B</span>
+          </div>
+          <select id="compare-select-b" onchange="handleDropdownCompareChange()" class="w-full p-2.5 rounded-xl bg-navy-850 border border-navy-700 text-white text-xs md:text-sm font-bold focus:outline-none focus:border-emerald-500">
+            <!-- options js -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Bảng Đối Chiếu Ma Trận Trực Quan -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+        <div class="p-4 md:p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+          <h3 class="font-black text-navy-900 text-sm md:text-base uppercase tracking-wider flex items-center space-x-2">
+            <i data-lucide="scale" class="w-4 h-4 text-emerald-600"></i>
+            <span>Ma Trận So Sánh Chỉ Số Tài Chính & Đòn Bẩy</span>
+          </h3>
+          <span class="text-[11px] bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">Chỉ số ưu việt hơn được tô sáng</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs md:text-sm">
+            <thead class="bg-navy-900 text-white uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3.5 px-4 w-1/3">Chỉ Số Tài Chính Thực Chiến</th>
+                <th class="py-3.5 px-4 w-1/3 text-gold-400 font-extrabold" id="comp-head-a">Bất Động Sản A</th>
+                <th class="py-3.5 px-4 w-1/3 text-emerald-400 font-extrabold" id="comp-head-b">Bất Động Sản B</th>
+              </tr>
+            </thead>
+            <tbody id="compare-table-body" class="divide-y divide-slate-100">
+              <!-- Render JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: BÁO CÁO THẨM ĐỊNH & XUẤT PDF ================= -->
     <section id="tab-report" class="hidden space-y-5">
       <div class="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -364,7 +445,7 @@
         </div>
         <div class="flex items-center space-x-2">
           <select id="report-property-selector" onchange="loadPropertyReport(this.value)" class="px-3.5 py-2 text-xs md:text-sm bg-white border border-slate-300 rounded-xl font-bold focus:outline-none focus:border-gold-600 shadow-sm">
-            <!-- Render options JS -->
+            <!-- options js -->
           </select>
           <button onclick="window.print()" class="gold-gradient hover:opacity-95 text-navy-950 px-4 py-2 rounded-xl text-xs font-black shadow flex items-center space-x-1.5 transition">
             <i data-lucide="printer" class="w-4 h-4"></i>
@@ -375,7 +456,6 @@
 
       <!-- BẢN XEM TRƯỚC BÁO CÁO ĐẦU TƯ (PRINT PREVIEW CONTAINER) -->
       <div id="print-report-container" class="bg-white rounded-3xl p-6 md:p-10 border border-slate-200 shadow-lg text-slate-800 space-y-8 max-w-4xl mx-auto">
-        
         <!-- Header Báo Cáo -->
         <div class="border-b-2 border-navy-900 pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -384,7 +464,7 @@
                 H
               </div>
               <div>
-                <h3 class="font-black text-lg text-navy-900 uppercase">HẬU DÒNG TIỀN REAL ESTATE</h3>
+                <h3 class="font-black text-base text-navy-900 uppercase">HẬU DÒNG TIỀN REAL ESTATE</h3>
                 <p class="text-xs text-gold-600 font-bold uppercase tracking-wider">HỆ THỐNG THẨM ĐỊNH TÀI CHÍNH & ĐÒN BẨY BĐS ĐÀ NẴNG</p>
               </div>
             </div>
@@ -421,7 +501,7 @@
             <span class="text-[10px] text-slate-500 block">Sau khi trả nợ vay</span>
           </div>
           <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-            <span class="text-[10px] font-bold uppercase text-slate-400 block">Cash-on-Cash Return</span>
+            <span class="text-[10px] font-bold uppercase text-slate-400 block">Cash-on-Cash (CoCR)</span>
             <span id="rep-coc" class="text-lg font-black text-gold-600">14.2%</span>
             <span class="text-[10px] text-slate-500 block">Lợi nhuận trên tiền mặt</span>
           </div>
@@ -434,7 +514,7 @@
 
         <!-- Bảng Chi Tiết Cấu Trúc Tài Chính & Vận Hành -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-          <!-- Cột 1: Cấu trúc Vốn & Đòn bẩy -->
+          <!-- Cột 1 -->
           <div class="space-y-3">
             <h4 class="font-black text-navy-900 uppercase text-[11px] border-b pb-1 flex items-center space-x-1.5">
               <i data-lucide="layers" class="w-4 h-4 text-gold-600"></i>
@@ -472,7 +552,7 @@
             </div>
           </div>
 
-          <!-- Cột 2: Khai thác Dòng tiền & NOI -->
+          <!-- Cột 2 -->
           <div class="space-y-3">
             <h4 class="font-black text-navy-900 uppercase text-[11px] border-b pb-1 flex items-center space-x-1.5">
               <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
@@ -535,39 +615,57 @@
             <div class="h-16"></div>
           </div>
         </div>
-
       </div>
     </section>
 
   </main>
 
+  <!-- ================= THANH THÔNG BÁO NỔI CHỌN SO SÁNH ================= -->
+  <div id="floating-compare-bar" class="no-print hidden fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-navy-900 border-2 border-emerald-500 text-white px-5 py-3 rounded-2xl shadow-2xl items-center space-x-4 animate-in fade-in slide-in-from-bottom duration-200">
+    <div class="flex items-center space-x-2 text-xs">
+      <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+      <span>Đã tích chọn <b id="float-selected-count" class="text-gold-400 font-black">0/2</b> tài sản</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <button onclick="clearComparisonSelection()" class="text-[11px] text-slate-400 hover:text-white px-2 py-1">Hủy</button>
+      <button id="btn-trigger-compare" onclick="switchTab('compare')" disabled class="emerald-gradient disabled:opacity-40 text-white px-4 py-1.5 rounded-xl font-bold text-xs uppercase shadow transition">
+        So Sánh Ngay
+      </button>
+    </div>
+  </div>
+
   <!-- ================= BOTTOM NAVIGATION MOBILE (iPhone) ================= -->
   <nav class="no-print md:hidden fixed bottom-0 left-0 right-0 bg-navy-900 border-t border-navy-800 text-slate-400 flex justify-around items-center py-2 z-40">
     <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="flex flex-col items-center space-y-1 text-emerald-500 font-bold">
       <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-      <span class="text-[10px]">Dashboard</span>
+      <span class="text-[9px]">Dashboard</span>
     </button>
     <button onclick="switchTab('properties')" id="bnav-properties" class="flex flex-col items-center space-y-1 hover:text-white">
       <div class="relative">
         <i data-lucide="calculator" class="w-5 h-5"></i>
         <span id="badge-count-mobile" class="absolute -top-1.5 -right-2 bg-gold-600 text-navy-950 text-[9px] font-black rounded-full px-1">0</span>
       </div>
-      <span class="text-[10px]">Dòng Tiền</span>
+      <span class="text-[9px]">Dòng Tiền</span>
+    </button>
+    <button onclick="switchTab('compare')" id="bnav-compare" class="flex flex-col items-center space-y-1 hover:text-white">
+      <div class="relative">
+        <i data-lucide="columns-2" class="w-5 h-5 text-emerald-400"></i>
+        <span id="badge-compare-mobile" class="absolute -top-1.5 -right-2 bg-emerald-600 text-white text-[9px] font-black rounded-full px-1">0</span>
+      </div>
+      <span class="text-[9px]">So Sánh</span>
     </button>
     <button onclick="switchTab('report')" id="bnav-report" class="flex flex-col items-center space-y-1 hover:text-white">
-      <i data-lucide="file-text" class="w-5 h-5 text-gold-400"></i>
-      <span class="text-[10px]">Báo Cáo PDF</span>
+      <i data-lucide="printer" class="w-5 h-5 text-slate-400"></i>
+      <span class="text-[9px]">In PDF</span>
     </button>
   </nav>
 
   <!-- ================= MODAL FORM: KHẢO SÁT & CẤU HÌNH ĐÒN BẨY ================= -->
   <div id="property-modal" class="no-print fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3.5 md:p-4 overflow-y-auto">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-3xl overflow-hidden my-auto border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
-      
-      <!-- Modal Header -->
       <div class="p-5 bg-navy-900 text-white flex justify-between items-center border-b border-navy-800">
         <div>
-          <span class="text-[10px] uppercase font-black tracking-widest text-gold-400">FINANCIAL ENGINE 2026</span>
+          <span class="text-[10px] uppercase font-black tracking-widest text-gold-400">HẬU DÒNG TIỀN FINANCE ENGINE</span>
           <h3 id="modal-title" class="text-base md:text-lg font-black text-white">Khảo Sát & Phân Tích Đòn Bẩy BĐS</h3>
         </div>
         <button onclick="closeModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-navy-800 transition">
@@ -575,11 +673,10 @@
         </button>
       </div>
 
-      <!-- Form Body -->
       <form id="property-form" onsubmit="handleFormSubmit(event)" class="p-5 md:p-6 space-y-5 max-h-[80vh] overflow-y-auto text-xs md:text-sm">
         <input type="hidden" id="form-id" />
 
-        <!-- KHỐI 1: THÔNG TIN CƠ BẢN -->
+        <!-- KHỐI 1 -->
         <div class="space-y-3">
           <h4 class="font-black text-navy-900 uppercase text-xs flex items-center space-x-1.5 border-b pb-1 text-slate-700">
             <i data-lucide="map-pin" class="w-4 h-4 text-gold-600"></i>
@@ -605,11 +702,11 @@
           </div>
         </div>
 
-        <!-- KHỐI 2: VỐN ĐẦU TƯ & ĐÒN BẨY TÀI CHÍNH (VAY NGÂN HÀNG) -->
+        <!-- KHỐI 2 -->
         <div class="space-y-3">
           <h4 class="font-black text-navy-900 uppercase text-xs flex items-center space-x-1.5 border-b pb-1 text-slate-700">
             <i data-lucide="landmark" class="w-4 h-4 text-rose-600"></i>
-            <span>2. Cấu Trúc Vốn & Đòn Bẩy Ngân Hàng (Mortgage Config)</span>
+            <span>2. Cấu Trúc Vốn & Đòn Bẩy Ngân Hàng</span>
           </h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
@@ -623,7 +720,6 @@
             <div>
               <label class="block font-bold text-rose-700 mb-1">Vốn Vay Ngân Hàng (Tỷ)</label>
               <input type="number" step="any" min="0" id="form-loan-amount" oninput="liveCalculate()" placeholder="10.0" class="w-full px-3 py-2 border border-rose-300 rounded-xl focus:border-rose-600 focus:outline-none font-black text-rose-600 bg-rose-50/40" />
-              <span class="text-[10px] text-slate-400 mt-0.5 block">Nhập 0 nếu không vay</span>
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Lãi Suất Vay (%/năm)</label>
@@ -632,32 +728,28 @@
             <div>
               <label class="block font-bold text-slate-700 mb-1">Thời Hạn Vay (Năm)</label>
               <input type="number" min="1" max="40" id="form-loan-term" oninput="liveCalculate()" value="20" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:border-gold-600 focus:outline-none font-bold" />
-              <span class="text-[10px] text-slate-400 mt-0.5 block">Mặc định 20 năm</span>
             </div>
           </div>
         </div>
 
-        <!-- KHỐI 3: KHAI THÁC & VẬN HÀNH THỰC TẾ -->
+        <!-- KHỐI 3 -->
         <div class="space-y-3">
           <h4 class="font-black text-navy-900 uppercase text-xs flex items-center space-x-1.5 border-b pb-1 text-slate-700">
             <i data-lucide="receipt" class="w-4 h-4 text-emerald-600"></i>
-            <span>3. Doanh Thu Thuê, Dự Phòng Trống Phòng & Chi Phí Vận Hành</span>
+            <span>3. Doanh Thu Thuê, Trống Phòng & Chi Phí Vận Hành</span>
           </h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="block font-bold text-emerald-700 mb-1">Doanh Thu Thuê/Tháng (Tr VNĐ) *</label>
               <input type="number" step="any" min="0" id="form-monthly-rent" oninput="liveCalculate()" required placeholder="140" class="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:border-emerald-600 focus:outline-none font-black text-emerald-600 bg-emerald-50/40" />
-              <span class="text-[10px] text-slate-400 mt-0.5 block">100% tỷ lệ lấp đầy</span>
             </div>
             <div>
-              <label class="block font-bold text-amber-700 mb-1">Tỷ Lệ Trống Phòng Dự Phòng (%)</label>
+              <label class="block font-bold text-amber-700 mb-1">Trống Phòng Dự Phòng (%)</label>
               <input type="number" step="any" min="0" max="100" id="form-vacancy-rate" oninput="liveCalculate()" value="5" class="w-full px-3 py-2 border border-amber-300 rounded-xl focus:border-amber-600 focus:outline-none font-bold text-amber-700 bg-amber-50/40" />
-              <span class="text-[10px] text-slate-400 mt-0.5 block">Khuyến nghị 5% - 10%</span>
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Chi Phí Vận Hành/Tháng (Tr VNĐ)</label>
               <input type="number" step="any" min="0" id="form-monthly-opex" oninput="liveCalculate()" placeholder="20" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:border-rose-600 focus:outline-none font-bold" />
-              <span class="text-[10px] text-slate-400 mt-0.5 block">Điện, nước, quản lý, bảo dưỡng</span>
             </div>
           </div>
           <div>
@@ -666,13 +758,12 @@
           </div>
         </div>
 
-        <!-- KHỐI 4: BẢNG TÍNH THỜI GIAN THỰC (LIVE FINANCIAL SCORECARD) -->
+        <!-- KHỐI 4: LIVE PREVIEW -->
         <div class="p-4 bg-navy-900 text-white rounded-2xl border border-navy-800 space-y-3">
           <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-gold-400">
             <span>KẾT QUẢ ĐỊNH LƯỢNG THỰC CHIẾN TỨC THÌ</span>
-            <span class="text-slate-400 text-[10px] font-normal lowercase">(tính theo phương thức P&I trả góp đều)</span>
+            <span class="text-slate-400 text-[10px] font-normal lowercase">(trả góp đều P&I)</span>
           </div>
-
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
             <div class="bg-navy-850 p-2.5 rounded-xl border border-navy-800">
               <span class="text-[10px] text-slate-400 block font-bold">VỐN TỰ CÓ</span>
@@ -687,12 +778,10 @@
               <span id="prev-net-cash" class="font-black text-emerald-400 text-sm">0.0 Tr/th</span>
             </div>
             <div class="bg-navy-850 p-2.5 rounded-xl border border-navy-800">
-              <span class="text-[10px] text-slate-400 block font-bold">CASH-ON-CASH</span>
+              <span class="text-[10px] text-slate-400 block font-bold">CASH-ON-CASH (CoCR)</span>
               <span id="prev-coc" class="font-black text-gold-400 text-sm">0.00%</span>
             </div>
           </div>
-
-          <!-- Nhãn Báo Động DSCR Thực Chiến -->
           <div class="pt-2 border-t border-navy-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
             <span class="text-slate-300 font-bold">Kiểm Định An Toàn Nợ (DSCR):</span>
             <div id="prev-risk-badge" class="px-3 py-1.5 rounded-xl font-black text-xs text-center">
@@ -701,7 +790,6 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold transition">
             Hủy
@@ -714,11 +802,11 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT FINANCIAL ENGINE ================= -->
+  <!-- ================= JAVASCRIPT FINANCIAL CORE & COMPARISON ================= -->
   <script>
-    const STORAGE_KEY = 'HAU_PROPERTIES_PRO_FINANCE_V4';
+    const STORAGE_KEY = 'HAU_PROPERTIES_PRO_FINANCE_V6';
 
-    // Dữ liệu mẫu thị trường Đà Nẵng với đầy đủ kịch bản nợ vay thực chiến
+    // Dữ liệu mẫu thị trường Đà Nẵng
     const INITIAL_PROPERTIES = [
       {
         id: 'prop-dn-1',
@@ -726,13 +814,13 @@
         district: 'Ngũ Hành Sơn',
         purchasePrice: 18.5,     // 18.5 Tỷ
         renovationCost: 1.5,      // 1.5 Tỷ -> Tổng vốn 20 Tỷ
-        loanAmount: 10.0,         // Vay 10 Tỷ -> Vốn tự có bỏ ra 10 Tỷ
+        loanAmount: 10.0,         // Vay 10 Tỷ -> Vốn tự có 10 Tỷ
         interestRate: 8.5,        // Lãi suất 8.5%/năm
-        loanTermYears: 20,        // Vay 20 năm -> Gốc+lãi ~ 86.78 tr/th
+        loanTermYears: 20,        // 20 năm
         monthlyRent: 145,         // Thuê 145 tr/th
-        vacancyRate: 5,           // Dự phòng trống phòng 5% -> -7.25 tr
-        monthlyOpex: 20,          // OPEX 20 tr -> NOI = 117.75 tr/th
-        notes: 'Gần khu phố Tây An Thượng, 16 phòng studio full khách nước ngoài. Đòn bẩy tối ưu, DSCR đạt 1.36x.'
+        vacancyRate: 5,           // Trống phòng 5%
+        monthlyOpex: 20,          // OPEX 20 tr
+        notes: 'Gần phố Tây An Thượng, 16 phòng studio full khách nước ngoài. Đòn bẩy tối ưu, DSCR đạt 1.36x.'
       },
       {
         id: 'prop-dn-2',
@@ -742,25 +830,25 @@
         renovationCost: 1.0,      // Tổng vốn 29 Tỷ
         loanAmount: 18.0,         // Vay cao 18 Tỷ
         interestRate: 9.5,        // Lãi suất 9.5%
-        loanTermYears: 15,        // Vay 15 năm -> Gốc+lãi ~ 188 Tr/th
-        monthlyRent: 95,          // Thuê chỉ 95 tr/th
-        vacancyRate: 3,           // Trống phòng 3% -> EGI ~ 92.15 tr
-        monthlyOpex: 8,           // OPEX 8 tr -> NOI ~ 84.15 tr/th
+        loanTermYears: 15,        // 15 năm
+        monthlyRent: 95,          // Thuê 95 tr/th
+        vacancyRate: 3,
+        monthlyOpex: 8,
         notes: 'Vị trí ngắm sông Hàn đắc địa nhưng đòn bẩy quá mức dẫn đến dòng tiền âm, chủ nhà phải bù tiền túi hàng tháng.'
       },
       {
         id: 'prop-dn-3',
-        name: 'Căn Hộ Hiyori Garden Tower (Võ Văn Kiệt)',
+        name: 'Căn Hộ Cao Cấp Hiyori Garden Tower (Võ Văn Kiệt)',
         district: 'Sơn Trà',
         purchasePrice: 4.2,
         renovationCost: 0.3,      // Tổng vốn 4.5 Tỷ
         loanAmount: 1.5,          // Vay 1.5 Tỷ
-        interestRate: 8.0,        // Lãi 8%
-        loanTermYears: 20,        // 20 năm -> Gốc+lãi ~ 12.55 Tr/th
+        interestRate: 8.0,
+        loanTermYears: 20,
         monthlyRent: 22,
-        vacancyRate: 5,           // EGI ~ 20.9 tr
-        monthlyOpex: 3,           // OPEX 3 tr -> NOI ~ 17.9 tr/th
-        notes: 'Chung cư tiêu chuẩn Nhật Bản, khách thuê dài hạn ổn định, tỷ suất Cash-on-Cash đạt mức cân bằng.'
+        vacancyRate: 5,
+        monthlyOpex: 3,
+        notes: 'Chung cư tiêu chuẩn Nhật Bản, khách thuê dài hạn ổn định, tỷ suất Cash-on-Cash đạt mức cân bằng an toàn.'
       }
     ];
 
@@ -768,89 +856,68 @@
       properties: [],
       currentTab: 'dashboard',
       selectedReportId: null,
+      selectedCompareIds: [], // Chứa tối đa 2 ID để so sánh
       chartCashflow: null,
       chartCapital: null
     };
 
-    // ================= 1. BỘ MÁY TÍNH TOÁN TÀI CHÍNH (FINANCIAL ENGINE) =================
+    // ================= 1. FINANCIAL ENGINE BẤT ĐỘNG SẢN =================
     const Engine = {
-      // 1. Tổng Vốn = Giá Mua + Cải Tạo (Tỷ VNĐ)
-      calcTotalCapital: (p) => {
-        return (Number(p.purchasePrice) || 0) + (Number(p.renovationCost) || 0);
-      },
+      calcTotalCapital: (p) => (Number(p.purchasePrice) || 0) + (Number(p.renovationCost) || 0),
 
-      // 2. Vốn Tự Có (Equity) = Tổng Vốn - Vốn Vay (Tỷ VNĐ)
       calcEquity: (p) => {
         const total = Engine.calcTotalCapital(p);
         const loan = Number(p.loanAmount) || 0;
         return Math.max(0, total - loan);
       },
 
-      // 3. Tiền Trả Nợ Gốc + Lãi Hàng Tháng P&I (Triệu VNĐ/tháng)
-      // Công thức Trả góp đều (Annuity Amortization Formula)
       calcMonthlyDebtService: (p) => {
-        const loanTr = (Number(p.loanAmount) || 0) * 1000; // Đổi Tỷ sang Triệu
+        const loanTr = (Number(p.loanAmount) || 0) * 1000;
         if (loanTr <= 0) return 0;
-
         const annualRate = Number(p.interestRate) || 0;
         const years = Number(p.loanTermYears) || 20;
         const totalMonths = years * 12;
         if (totalMonths <= 0) return 0;
-
-        const r = (annualRate / 100) / 12; // Lãi suất tháng
+        const r = (annualRate / 100) / 12;
         if (r <= 0) return loanTr / totalMonths;
-
-        // P = L * [r*(1+r)^n] / [(1+r)^n - 1]
         const factor = Math.pow(1 + r, totalMonths);
-        const monthlyPayment = loanTr * (r * factor) / (factor - 1);
-        return monthlyPayment;
+        return loanTr * (r * factor) / (factor - 1);
       },
 
-      // 4. Doanh Thu Hiệu Dụng Sau Trừ Trống Phòng (EGI)
       calcEGI: (p) => {
         const rent = Number(p.monthlyRent) || 0;
         const vacancy = Number(p.vacancyRate !== undefined ? p.vacancyRate : 5);
         return rent * (1 - vacancy / 100);
       },
 
-      // 5. Thu Nhập Hoạt Động Ròng (NOI) = EGI - OPEX (Triệu VNĐ/tháng)
       calcNOI: (p) => {
         const egi = Engine.calcEGI(p);
         const opex = Number(p.monthlyOpex) || 0;
         return egi - opex;
       },
 
-      // 6. Dòng Tiền Ròng Thực Nhận / Tháng = NOI - Tiền Trả Nợ (Triệu VNĐ/tháng)
       calcNetCashflowMonthly: (p) => {
         const noi = Engine.calcNOI(p);
         const debt = Engine.calcMonthlyDebtService(p);
         return noi - debt;
       },
 
-      // 7. Dòng Tiền Ròng Thực Nhận / Năm (Triệu VNĐ/năm)
-      calcNetCashflowAnnual: (p) => {
-        return Engine.calcNetCashflowMonthly(p) * 12;
-      },
+      calcNetCashflowAnnual: (p) => Engine.calcNetCashflowMonthly(p) * 12,
 
-      // 8. Tỷ Suất Hoàn Vốn Trên Tiền Mặt: Cash-on-Cash Return (%)
-      // CoC (%) = (Dòng tiền ròng 1 năm / Vốn tự có bỏ ra) * 100
       calcCashOnCash: (p) => {
         const equityTy = Engine.calcEquity(p);
         if (equityTy <= 0) return 0;
         const netAnnualTr = Engine.calcNetCashflowAnnual(p);
-        // equityTy * 1000 để đổi thành Triệu
         return (netAnnualTr / (equityTy * 1000)) * 100;
       },
 
-      // 9. Hệ Số Phủ Nợ (DSCR) = NOI / Tiền Trả Nợ Ngân Hàng
       calcDSCR: (p) => {
         const debt = Engine.calcMonthlyDebtService(p);
-        if (debt <= 0) return Infinity; // Không vay nợ
+        if (debt <= 0) return Infinity;
         const noi = Engine.calcNOI(p);
         return noi / debt;
       },
 
-      // 10. Tỷ Suất Sinh Lời Thuần (Cap Rate Không Đòn Bẩy)
       calcCapRate: (p) => {
         const totalCap = Engine.calcTotalCapital(p);
         if (totalCap <= 0) return 0;
@@ -858,17 +925,16 @@
         return (noiAnnual / (totalCap * 1000)) * 100;
       },
 
-      // 11. Đánh Giá & Báo Động Rủi Ro Thực Chiến (DSCR Risk Evaluation)
       getRiskEvaluation: (p) => {
         const loan = Number(p.loanAmount) || 0;
         if (loan <= 0) {
           return {
             type: 'no-debt',
-            badgeClass: 'bg-slate-800 text-gold-400 border border-gold-600/30',
-            label: '100% VỐN TỰ CÓ - KHÔNG ÁP LỰC TRẢ NỢ',
+            badgeClass: 'bg-slate-800 text-gold-400 border border-gold-600/30 font-bold',
+            label: '100% VỐN TỰ CÓ - DÒNG TIỀN THUẦN',
             shortLabel: '100% Vốn Tự Có',
             dscrVal: 'N/A',
-            recommendation: 'Tài sản an toàn tuyệt đối trước biến động lãi suất. Nếu muốn mở rộng quy mô, có thể cân nhắc đòn bẩy thận trọng dưới 40% để tối ưu hóa hiệu suất Cash-on-Cash.'
+            recommendation: 'Tài sản an toàn tuyệt đối. Có thể đòn bẩy thêm 30-40% để tái đầu tư dự án mới.'
           };
         }
 
@@ -881,9 +947,9 @@
             type: 'danger',
             badgeClass: 'bg-rose-600 text-white shadow-md shadow-rose-900/30 font-black',
             label: `RỦI RO DÒNG TIỀN ÂM - Phải bù tiền túi ${deficit} triệu/tháng`,
-            shortLabel: `Bù tiền túi ${deficit} tr/th`,
+            shortLabel: `Bù ${deficit} tr/th`,
             dscrVal: dscr.toFixed(2) + 'x',
-            recommendation: `CẢNH BÁO NGUY HIỂM: Doanh thu khai thác không đủ trả nợ ngân hàng. Cần đàm phán giảm giá mua tối thiểu ${(Math.abs(netMonthly) * 12 / 100).toFixed(1)} Tỷ, hoặc cơ cấu lại kỳ hạn vay từ 15 năm lên 25 năm để hạ tiền trả nợ hàng tháng.`
+            recommendation: `CẢNH BÁO DÒNG TIỀN ÂM: Doanh thu không đủ trả nợ gốc lãi. Cần đàm phán giảm giá mua hoặc kéo dài kỳ hạn vay.`
           };
         } else if (dscr <= 1.25) {
           return {
@@ -892,7 +958,7 @@
             label: `DÒNG TIỀN VỪA ĐỦ - Biên an toàn thấp (DSCR: ${dscr.toFixed(2)}x)`,
             shortLabel: `Biên thấp (${dscr.toFixed(2)}x)`,
             dscrVal: dscr.toFixed(2) + 'x',
-            recommendation: `Biên an toàn mong manh. Nếu lãi suất thả nổi tăng 1.5% hoặc tỷ lệ trống phòng tăng đột biến vào mùa mưa Đà Nẵng, dòng tiền sẽ rơi vào vùng âm. Cần trích lập quỹ dự phòng thanh khoản tối thiểu 6 tháng tiền trả nợ.`
+            recommendation: `Biên an toàn mỏng. Nếu lãi suất thả nổi tăng 1.5% dòng tiền sẽ âm. Cần trích lập quỹ dự phòng thanh khoản.`
           };
         } else {
           return {
@@ -901,13 +967,13 @@
             label: `DÒNG TIỀN AN TOÀN - Đòn bẩy tối ưu (DSCR: ${dscr.toFixed(2)}x)`,
             shortLabel: `An toàn (${dscr.toFixed(2)}x)`,
             dscrVal: dscr.toFixed(2) + 'x',
-            recommendation: `CẤU TRÚC ĐÒN BẨY XUẤT SẮC: Thu nhập ròng đủ sức chi trả nợ ngân hàng và vẫn tạo ra dòng tiền thặng dư đều đặn. Hồ sơ vay này được các ngân hàng thương mại đánh giá cao và dễ giải ngân với lãi suất ưu đãi.`
+            recommendation: `CẤU TRÚC ĐÒN BẨY XUẤT SẮC: Thu nhập ròng đủ sức chi trả nợ và tạo ra dòng tiền thặng dư tự do bền vững.`
           };
         }
       }
     };
 
-    // ================= 2. KHỞI TẠO & LƯU TRỮ LOCALSTORAGE =================
+    // ================= 2. KHỞI TẠO HỆ THỐNG =================
     window.addEventListener('DOMContentLoaded', () => {
       loadStorage();
       renderAll();
@@ -932,6 +998,8 @@
       }
       if (state.properties.length > 0) {
         state.selectedReportId = state.properties[0].id;
+        // Mặc định chọn 2 tài sản đầu tiên nếu có
+        state.selectedCompareIds = state.properties.slice(0, 2).map(p => p.id);
       }
     }
 
@@ -943,8 +1011,9 @@
       renderKPIs();
       renderProperties();
       renderCharts();
-      populateReportSelector();
-      loadPropertyReport(state.selectedReportId);
+      populateAllSelectors();
+      renderComparison();
+      updateCompareUI();
       updateBadgeCounts();
       initLucide();
     }
@@ -955,14 +1024,42 @@
       document.getElementById('badge-count-mobile').textContent = count;
     }
 
-    // ================= 3. RENDER DASHBOARD KPIS =================
+    function populateAllSelectors() {
+      const selA = document.getElementById('compare-select-a');
+      const selB = document.getElementById('compare-select-b');
+      const selRep = document.getElementById('report-property-selector');
+
+      const selectors = [selA, selB, selRep];
+      selectors.forEach(s => { if(s) s.innerHTML = ''; });
+
+      if (state.properties.length === 0) {
+        selectors.forEach(s => { if(s) s.innerHTML = '<option value="">Chưa có BĐS</option>'; });
+        return;
+      }
+
+      state.properties.forEach(p => {
+        selectors.forEach(sel => {
+          if (!sel) return;
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = `${p.name} (${p.district}) - ${p.purchasePrice} Tỷ`;
+          sel.appendChild(opt);
+        });
+      });
+
+      if (state.selectedCompareIds.length >= 2) {
+        if (selA) selA.value = state.selectedCompareIds[0];
+        if (selB) selB.value = state.selectedCompareIds[1];
+      } else if (state.properties.length >= 2) {
+        if (selA) selA.value = state.properties[0].id;
+        if (selB) selB.value = state.properties[1].id;
+      }
+      if (selRep && state.selectedReportId) selRep.value = state.selectedReportId;
+    }
+
+    // ================= 3. RENDER DASHBOARD & KPIS =================
     function renderKPIs() {
-      let totalCap = 0;
-      let totalEquity = 0;
-      let totalLoan = 0;
-      let totalDebtService = 0;
-      let totalNetMonthly = 0;
-      let totalNOI = 0;
+      let totalCap = 0, totalEquity = 0, totalLoan = 0, totalDebtService = 0, totalNetMonthly = 0, totalNOI = 0;
 
       state.properties.forEach(p => {
         totalCap += Engine.calcTotalCapital(p);
@@ -995,7 +1092,6 @@
       if (totalLoan <= 0) {
         dscrEl.textContent = 'N/A';
         dscrStatusEl.textContent = '100% Vốn Tự Có';
-        dscrStatusEl.className = 'text-[10px] font-black uppercase text-gold-400 mt-1 truncate';
       } else {
         dscrEl.textContent = avgDSCR.toFixed(2) + 'x';
         if (avgDSCR < 1.0) {
@@ -1011,7 +1107,7 @@
       }
     }
 
-    // ================= 4. RENDER DANH MỤC BẤT ĐỘNG SẢN =================
+    // ================= 4. RENDER DANH SÁCH BẤT ĐỘNG SẢN & TÍCH CHỌN =================
     function renderProperties() {
       const search = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
       const district = document.getElementById('district-filter')?.value || 'all';
@@ -1042,12 +1138,22 @@
         const netCashflow = Engine.calcNetCashflowMonthly(p);
         const coc = Engine.calcCashOnCash(p);
         const risk = Engine.getRiskEvaluation(p);
+        const isChecked = state.selectedCompareIds.includes(p.id);
 
         // 1. Desktop Row
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm";
+        tr.className = `hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm ${isChecked ? 'bg-emerald-50/50' : ''}`;
         tr.innerHTML = `
-          <td class="py-4 px-5">
+          <td class="py-4 px-3 text-center">
+            <input 
+              type="checkbox" 
+              class="compare-checkbox w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
+              onchange="toggleCompareCheck('${p.id}')" 
+              ${isChecked ? 'checked' : ''}
+              title="Tích chọn để so sánh đối chiếu"
+            />
+          </td>
+          <td class="py-4 px-4">
             <div class="font-extrabold text-navy-900">${p.name}</div>
             <div class="text-[11px] text-slate-500 mt-0.5 flex items-center space-x-1.5">
               <span class="inline-block px-2 py-0.5 rounded bg-slate-100 font-bold text-slate-700">${p.district}</span>
@@ -1084,7 +1190,7 @@
           <td class="py-4 px-5 text-center">
             <div class="flex items-center justify-center space-x-1.5">
               <button onclick="viewReport('${p.id}')" title="Xem Báo Cáo In / PDF" class="p-1.5 text-navy-900 hover:bg-slate-200 rounded-lg transition">
-                <i data-lucide="file-text" class="w-4 h-4 text-emerald-600"></i>
+                <i data-lucide="printer" class="w-4 h-4 text-gold-600"></i>
               </button>
               <button onclick="editProperty('${p.id}')" title="Sửa thông số" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition">
                 <i data-lucide="edit-3" class="w-4 h-4"></i>
@@ -1099,12 +1205,20 @@
 
         // 2. Mobile iPhone Card
         const card = document.createElement('div');
-        card.className = "p-4 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-2.5";
+        card.className = `p-4 bg-white rounded-2xl border ${isChecked ? 'border-emerald-500 bg-emerald-50/20' : 'border-slate-200'} shadow-sm space-y-2.5`;
         card.innerHTML = `
           <div class="flex justify-between items-start gap-2">
-            <div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${p.district}</span>
-              <h4 class="font-extrabold text-navy-900 text-sm mt-1">${p.name}</h4>
+            <div class="flex items-start space-x-2.5">
+              <input 
+                type="checkbox" 
+                class="compare-checkbox w-4 h-4 mt-1 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer" 
+                onchange="toggleCompareCheck('${p.id}')" 
+                ${isChecked ? 'checked' : ''}
+              />
+              <div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${p.district}</span>
+                <h4 class="font-extrabold text-navy-900 text-sm mt-1">${p.name}</h4>
+              </div>
             </div>
             <span class="text-xs font-black px-2 py-1 rounded-lg bg-navy-900 text-gold-400">
               CoC: ${coc.toFixed(1)}%
@@ -1131,11 +1245,14 @@
           </div>
 
           <div class="flex items-center justify-between pt-1">
-            <button onclick="viewReport('${p.id}')" class="text-xs font-bold text-emerald-700 hover:underline flex items-center space-x-1">
-              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-              <span>Xuất Báo Cáo PDF</span>
+            <button onclick="toggleCompareCheck('${p.id}')" class="text-xs font-bold text-emerald-700 flex items-center space-x-1">
+              <i data-lucide="columns-2" class="w-3.5 h-3.5"></i>
+              <span>${isChecked ? 'Đang chọn so sánh' : 'Tích chọn so sánh'}</span>
             </button>
             <div class="flex items-center space-x-1">
+              <button onclick="viewReport('${p.id}')" class="p-1.5 text-gold-600 hover:bg-gold-50 rounded-lg">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+              </button>
               <button onclick="editProperty('${p.id}')" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg">
                 <i data-lucide="edit-3" class="w-4 h-4"></i>
               </button>
@@ -1151,9 +1268,8 @@
       initLucide();
     }
 
-    // ================= 5. BIỂU ĐỒ TRỰC QUAN HÓA CHART.JS =================
+    // ================= 5. BIỂU ĐỒ DASHBOARD =================
     function renderCharts() {
-      // 1. Biểu đồ Dòng tiền NOI vs Nợ Ngân Hàng
       const labels = state.properties.map(p => p.name.length > 14 ? p.name.substring(0, 12) + '...' : p.name);
       const noiData = state.properties.map(p => Engine.calcNOI(p));
       const debtData = state.properties.map(p => Engine.calcMonthlyDebtService(p));
@@ -1167,13 +1283,13 @@
           labels: labels.length ? labels : ['Chưa có BĐS'],
           datasets: [
             {
-              label: 'Thu nhập hoạt động ròng NOI (Tr/th)',
+              label: 'Thu nhập ròng NOI (Tr/th)',
               data: noiData.length ? noiData : [0],
               backgroundColor: '#059669',
               borderRadius: 6
             },
             {
-              label: 'Nợ ngân hàng phải trả P&I (Tr/th)',
+              label: 'Nợ ngân hàng P&I (Tr/th)',
               data: debtData.length ? debtData : [0],
               backgroundColor: '#e11d48',
               borderRadius: 6
@@ -1187,17 +1303,12 @@
             legend: { position: 'top', labels: { boxWidth: 10, font: { family: 'Inter', size: 10, weight: 600 } } }
           },
           scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { callback: (v) => v + ' Tr' }
-            }
+            y: { beginAtZero: true, ticks: { callback: (v) => v + ' Tr' } }
           }
         }
       });
 
-      // 2. Biểu đồ Cơ Cấu Vốn Toàn Danh Mục
-      let totalEquity = 0;
-      let totalLoan = 0;
+      let totalEquity = 0, totalLoan = 0;
       state.properties.forEach(p => {
         totalEquity += Engine.calcEquity(p);
         totalLoan += (Number(p.loanAmount) || 0);
@@ -1223,9 +1334,7 @@
           plugins: {
             legend: { position: 'bottom', labels: { boxWidth: 10, font: { family: 'Inter', size: 10 } } },
             tooltip: {
-              callbacks: {
-                label: (c) => ` ${c.label}: ${Number(c.raw).toFixed(2)} Tỷ VNĐ`
-              }
+              callbacks: { label: (c) => ` ${c.label}: ${Number(c.raw).toFixed(2)} Tỷ VNĐ` }
             }
           },
           cutout: '65%'
@@ -1233,7 +1342,252 @@
       });
     }
 
-    // ================= 6. FORM MODAL & TÍNH TOÁN REAL-TIME =================
+    // ================= 6. TÍNH NĂNG TÍCH CHỌN & SO SÁNH 2 TÀI SẢN =================
+    function toggleCompareCheck(id) {
+      const idx = state.selectedCompareIds.indexOf(id);
+      if (idx !== -1) {
+        state.selectedCompareIds.splice(idx, 1);
+      } else {
+        if (state.selectedCompareIds.length >= 2) {
+          // Bỏ chọn cái đầu tiên và thêm cái mới vào
+          state.selectedCompareIds.shift();
+        }
+        state.selectedCompareIds.push(id);
+      }
+
+      renderProperties();
+      updateCompareUI();
+      renderComparison();
+    }
+
+    function clearComparisonSelection() {
+      state.selectedCompareIds = [];
+      renderProperties();
+      updateCompareUI();
+      renderComparison();
+    }
+
+    function updateCompareUI() {
+      const count = state.selectedCompareIds.length;
+      document.getElementById('badge-compare-count').textContent = `${count}/2`;
+      document.getElementById('badge-compare-mobile').textContent = count;
+
+      const floatBar = document.getElementById('floating-compare-bar');
+      const floatCount = document.getElementById('float-selected-count');
+      const btnCompare = document.getElementById('btn-trigger-compare');
+
+      if (count > 0) {
+        floatBar.classList.remove('hidden');
+        floatBar.classList.add('flex');
+        floatCount.textContent = `${count}/2`;
+        btnCompare.disabled = (count < 2);
+      } else {
+        floatBar.classList.add('hidden');
+        floatBar.classList.remove('flex');
+      }
+
+      // Cập nhật dropdowns bên Tab So Sánh
+      const selA = document.getElementById('compare-select-a');
+      const selB = document.getElementById('compare-select-b');
+      if (count >= 1 && selA) selA.value = state.selectedCompareIds[0];
+      if (count >= 2 && selB) selB.value = state.selectedCompareIds[1];
+    }
+
+    function handleDropdownCompareChange() {
+      const idA = document.getElementById('compare-select-a')?.value;
+      const idB = document.getElementById('compare-select-b')?.value;
+      if (idA && idB) {
+        state.selectedCompareIds = [idA, idB];
+        renderProperties();
+        updateCompareUI();
+        renderComparison();
+      }
+    }
+
+    function renderComparison() {
+      const tbody = document.getElementById('compare-table-body');
+      if (!tbody) return;
+
+      let idA = state.selectedCompareIds[0] || document.getElementById('compare-select-a')?.value;
+      let idB = state.selectedCompareIds[1] || document.getElementById('compare-select-b')?.value;
+
+      if (!idA && state.properties.length > 0) idA = state.properties[0].id;
+      if (!idB && state.properties.length > 1) idB = state.properties[1].id;
+
+      const pA = state.properties.find(x => x.id === idA);
+      const pB = state.properties.find(x => x.id === idB);
+
+      if (!pA || !pB || pA.id === pB.id) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="3" class="p-8 text-center text-slate-500">
+              <div class="max-w-md mx-auto space-y-2">
+                <i data-lucide="columns-2" class="w-8 h-8 text-gold-500 mx-auto mb-1"></i>
+                <p class="font-bold text-navy-900">Vui lòng tích chọn 2 bất động sản khác nhau để bắt đầu đối chiếu.</p>
+                <p class="text-xs text-slate-400">Bạn có thể tích chọn trực tiếp từ danh mục "Khảo Sát & Dòng Tiền" hoặc chọn từ 2 menu thả xuống phía trên.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        initLucide();
+        return;
+      }
+
+      document.getElementById('comp-head-a').textContent = pA.name;
+      document.getElementById('comp-head-b').textContent = pB.name;
+
+      // Các chỉ số tính toán
+      const capA = Engine.calcTotalCapital(pA), capB = Engine.calcTotalCapital(pB);
+      const eqA = Engine.calcEquity(pA), eqB = Engine.calcEquity(pB);
+      const loanA = Number(pA.loanAmount || 0), loanB = Number(pB.loanAmount || 0);
+      const ltvA = capA > 0 ? (loanA / capA) * 100 : 0;
+      const ltvB = capB > 0 ? (loanB / capB) * 100 : 0;
+      const rentA = Number(pA.monthlyRent || 0), rentB = Number(pB.monthlyRent || 0);
+      const noiA = Engine.calcNOI(pA), noiB = Engine.calcNOI(pB);
+      const debtA = Engine.calcMonthlyDebtService(pA), debtB = Engine.calcMonthlyDebtService(pB);
+      const netA = Engine.calcNetCashflowMonthly(pA), netB = Engine.calcNetCashflowMonthly(pB);
+      const cocA = Engine.calcCashOnCash(pA), cocB = Engine.calcCashOnCash(pB);
+      const capRateA = Engine.calcCapRate(pA), capRateB = Engine.calcCapRate(pB);
+      const dscrA = Engine.calcDSCR(pA), dscrB = Engine.calcDSCR(pB);
+      const riskA = Engine.getRiskEvaluation(pA), riskB = Engine.getRiskEvaluation(pB);
+
+      const rows = [
+        { 
+          label: 'Quận / Khu Vực Đà Nẵng', 
+          valA: pA.district, 
+          valB: pB.district, 
+          highlight: null 
+        },
+        { 
+          label: 'Giá Mua Theo Hợp Đồng', 
+          valA: `${pA.purchasePrice} Tỷ`, 
+          valB: `${pB.purchasePrice} Tỷ`, 
+          highlight: null 
+        },
+        { 
+          label: 'Chi Phí Cải Tạo / Hoàn Thiện', 
+          valA: `${pA.renovationCost || 0} Tỷ`, 
+          valB: `${pB.renovationCost || 0} Tỷ`, 
+          highlight: null 
+        },
+        { 
+          label: '1. TỔNG VỐN ĐẦU TƯ (Total Capital)', 
+          valA: `${capA.toFixed(2)} Tỷ`, 
+          valB: `${capB.toFixed(2)} Tỷ`, 
+          highlight: null,
+          isBold: true
+        },
+        { 
+          label: '2. VỐN TỰ CÓ BỎ RA (Equity Thực Tế)', 
+          valA: `${eqA.toFixed(2)} Tỷ`, 
+          valB: `${eqB.toFixed(2)} Tỷ`, 
+          highlight: eqA < eqB ? 'A' : 'B',
+          isBold: true,
+          note: 'Phương án cần ít vốn tự có hơn'
+        },
+        { 
+          label: 'Hạn Mức Vay Ngân Hàng (LTV %)', 
+          valA: `${loanA.toFixed(2)} Tỷ (${ltvA.toFixed(1)}%)`, 
+          valB: `${loanB.toFixed(2)} Tỷ (${ltvB.toFixed(1)}%)`, 
+          highlight: null 
+        },
+        { 
+          label: 'Lãi Suất Vay & Kỳ Hạn', 
+          valA: `${pA.interestRate || 0}% • ${pA.loanTermYears || 20} năm`, 
+          valB: `${pB.interestRate || 0}% • ${pB.loanTermYears || 20} năm`, 
+          highlight: null 
+        },
+        { 
+          label: 'Gốc + Lãi Trả Góp / Tháng (P&I)', 
+          valA: `-${debtA.toFixed(1)} Tr/th`, 
+          valB: `-${debtB.toFixed(1)} Tr/th`, 
+          highlight: debtA < debtB ? 'A' : 'B',
+          note: 'Áp lực trả nợ thấp hơn'
+        },
+        { 
+          label: 'Doanh Thu Thuê / Tháng (100% lấp đầy)', 
+          valA: `${rentA} Tr/th`, 
+          valB: `${rentB} Tr/th`, 
+          highlight: rentA > rentB ? 'A' : 'B' 
+        },
+        { 
+          label: 'Thu Nhập Hoạt Động Ròng (NOI)', 
+          valA: `${noiA.toFixed(1)} Tr/th`, 
+          valB: `${noiB.toFixed(1)} Tr/th`, 
+          highlight: noiA > noiB ? 'A' : 'B' 
+        },
+        { 
+          label: '3. DÒNG TIỀN RÒNG THỰC NHẬN / THÁNG', 
+          valA: `${(netA >= 0 ? '+' : '') + netA.toFixed(1)} Tr/th`, 
+          valB: `${(netB >= 0 ? '+' : '') + netB.toFixed(1)} Tr/th`, 
+          highlight: netA > netB ? 'A' : 'B',
+          isKey: true,
+          note: 'Dòng tiền thặng dư vào túi mỗi tháng'
+        },
+        { 
+          label: 'Dòng Tiền Ròng Thực Nhận / Năm', 
+          valA: `${(netA * 12).toFixed(1)} Tr/năm`, 
+          valB: `${(netB * 12).toFixed(1)} Tr/năm`, 
+          highlight: (netA * 12) > (netB * 12) ? 'A' : 'B' 
+        },
+        { 
+          label: '4. CASH-ON-CASH RETURN (CoCR %)', 
+          valA: `${cocA.toFixed(1)}% / năm`, 
+          valB: `${cocB.toFixed(1)}% / năm`, 
+          highlight: cocA > cocB ? 'A' : 'B',
+          isKey: true,
+          note: 'Tỷ suất hoàn vốn trên tiền mặt tự có'
+        },
+        { 
+          label: '5. TỶ SUẤT CAP RATE (Không Đòn Bẩy)', 
+          valA: `${capRateA.toFixed(2)}% / năm`, 
+          valB: `${capRateB.toFixed(2)}% / năm`, 
+          highlight: capRateA > capRateB ? 'A' : 'B' 
+        },
+        { 
+          label: '6. HỆ SỐ PHỦ NỢ (DSCR)', 
+          valA: dscrA === Infinity ? '100% Vốn Tự Có' : `${dscrA.toFixed(2)}x`, 
+          valB: dscrB === Infinity ? '100% Vốn Tự Có' : `${dscrB.toFixed(2)}x`, 
+          highlight: dscrA > dscrB ? 'A' : 'B',
+          isKey: true,
+          note: 'Khả năng trả nợ (>1.25x là an toàn)'
+        },
+        { 
+          label: 'Đánh Giá Rủi Ro Thực Chiến', 
+          valA: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskA.badgeClass}">${riskA.shortLabel}</span>`, 
+          valB: `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${riskB.badgeClass}">${riskB.shortLabel}</span>`, 
+          highlight: null,
+          isHTML: true 
+        }
+      ];
+
+      tbody.innerHTML = rows.map(r => {
+        const bgA = r.highlight === 'A' ? 'bg-emerald-50 text-emerald-900 font-black' : '';
+        const bgB = r.highlight === 'B' ? 'bg-emerald-50 text-emerald-900 font-black' : '';
+        const borderStyle = r.isKey ? 'border-y-2 border-emerald-500/40 bg-slate-50/50' : '';
+
+        return `
+          <tr class="hover:bg-slate-50/70 transition ${borderStyle}">
+            <td class="py-3.5 px-4 font-bold text-slate-700">
+              <span class="${r.isKey ? 'text-navy-900 text-sm font-black' : (r.isBold ? 'text-navy-900 font-extrabold' : '')}">${r.label}</span>
+              ${r.note ? `<span class="block text-[10px] text-slate-400 font-normal mt-0.5">${r.note}</span>` : ''}
+            </td>
+            <td class="py-3.5 px-4 ${bgA} ${r.isKey ? 'text-sm' : ''}">
+              ${r.isHTML ? r.valA : r.valA}
+              ${r.highlight === 'A' ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600 inline ml-1"></i>' : ''}
+            </td>
+            <td class="py-3.5 px-4 ${bgB} ${r.isKey ? 'text-sm' : ''}">
+              ${r.isHTML ? r.valB : r.valB}
+              ${r.highlight === 'B' ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600 inline ml-1"></i>' : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      initLucide();
+    }
+
+    // ================= 7. FORM MODAL & TÍNH TOÁN REAL-TIME =================
     function liveCalculate() {
       const dummy = {
         purchasePrice: Number(document.getElementById('form-purchase-price').value) || 0,
@@ -1344,6 +1698,7 @@
     function deleteProperty(id) {
       if (confirm('Bạn có chắc chắn muốn xóa tài sản khảo sát này?')) {
         state.properties = state.properties.filter(p => p.id !== id);
+        state.selectedCompareIds = state.selectedCompareIds.filter(x => x !== id);
         if (state.selectedReportId === id) {
           state.selectedReportId = state.properties.length ? state.properties[0].id : null;
         }
@@ -1356,6 +1711,7 @@
       if (confirm('Khôi phục lại danh sách BĐS mẫu thực tế tại Đà Nẵng?')) {
         state.properties = [...INITIAL_PROPERTIES];
         state.selectedReportId = state.properties[0].id;
+        state.selectedCompareIds = state.properties.slice(0, 2).map(p => p.id);
         saveStorage();
         renderAll();
       }
@@ -1365,29 +1721,13 @@
       if (confirm('Cảnh báo: Toàn bộ danh mục đầu tư sẽ bị xóa trắng! Bạn có chắc không?')) {
         state.properties = [];
         state.selectedReportId = null;
+        state.selectedCompareIds = [];
         saveStorage();
         renderAll();
       }
     }
 
-    // ================= 7. BÁO CÁO THẨM ĐỊNH & XUẤT PDF =================
-    function populateReportSelector() {
-      const selector = document.getElementById('report-property-selector');
-      selector.innerHTML = '';
-      if (state.properties.length === 0) {
-        selector.innerHTML = '<option value="">Không có BĐS</option>';
-        return;
-      }
-
-      state.properties.forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.id;
-        opt.textContent = `${p.name} (${p.district})`;
-        if (p.id === state.selectedReportId) opt.selected = true;
-        selector.appendChild(opt);
-      });
-    }
-
+    // ================= 8. BÁO CÁO THẨM ĐỊNH & XUẤT PDF =================
     function viewReport(id) {
       state.selectedReportId = id;
       switchTab('report');
@@ -1464,12 +1804,13 @@
       initLucide();
     }
 
-    // ================= 8. NAVIGATION TABS =================
+    // ================= 9. NAVIGATION TABS =================
     function switchTab(tabId) {
       state.currentTab = tabId;
 
-      ['dashboard', 'properties', 'report'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('hidden');
+      ['dashboard', 'properties', 'compare', 'report'].forEach(t => {
+        const section = document.getElementById(`tab-${t}`);
+        if (section) section.classList.add('hidden');
         
         const pcNav = document.getElementById(`nav-${t}`);
         if (pcNav) {
@@ -1482,7 +1823,8 @@
         }
       });
 
-      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const currentSec = document.getElementById(`tab-${tabId}`);
+      if (currentSec) currentSec.classList.remove('hidden');
 
       const activePcNav = document.getElementById(`nav-${tabId}`);
       if (activePcNav) {
@@ -1496,6 +1838,9 @@
 
       if (tabId === 'dashboard') {
         renderCharts();
+      }
+      if (tabId === 'compare') {
+        renderComparison();
       }
       if (tabId === 'report' && state.selectedReportId) {
         loadPropertyReport(state.selectedReportId);
